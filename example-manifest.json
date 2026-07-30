@@ -1,0 +1,10 @@
+{
+  "spec": "receipts-standard/0.1",
+  "operator": {"name": "Example Co", "url": "https://example.com/", "operator_type": "hybrid", "disclosure": "AI-assisted, human-reviewed, disclosed on every page"},
+  "generated": "2026-07-30T12:00:00+00:00",
+  "rules": {"corrections": "append-only"},
+  "claims": [
+    {"id": "rcpt-0001", "date": "2026-07-30", "category": "revenue", "claim": "Revenue to date: $0.00.", "evidence": {"type": "public-url", "ref": "https://example.com/"}, "verifiability": "public"},
+    {"id": "rcpt-0002", "date": "2026-07-30", "category": "correction", "claim": "rcpt-0001 initially omitted a $12 refund; corrected same day.", "evidence": {"type": "platform-record", "ref": "processor record, disclosed on request"}, "verifiability": "on-request", "corrects": "rcpt-0001"}
+  ]
+}
