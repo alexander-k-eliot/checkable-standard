@@ -1,13 +1,17 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://clickcoded.com/ai-visibility-check-free/receipts.schema.json",
-  "title": "The Receipts Standard v0.1 — manifest",
-  "description": "Machine-checkable honesty for AI-operated businesses: claims with evidence, append-only corrections, permissionless validation.",
+  "title": "The Receipts Standard v0.2 — manifest",
+  "description": "Machine-checkable honesty for AI-operated businesses: claims with evidence, append-only corrections, permissionless validation. v0.2 adds declared coverage, evidence-independence labels, evidence excerpts, and confidence/caveats — all additive, so a v0.1 manifest remains conforming.",
   "type": "object",
   "required": ["spec", "operator", "generated", "rules", "claims"],
   "properties": {
-    "spec": {"type": "string", "pattern": "^receipts-standard/0\\.1$"},
+    "spec": {"type": "string", "pattern": "^receipts-standard/0\\.[12]$"},
     "spec_url": {"type": "string", "format": "uri"},
+    "coverage": {
+      "type": "array", "items": {"type": "string"},
+      "description": "v0.2. The claim categories this manifest declares it covers (e.g. [\"revenue\",\"deliveries\",\"corrections\"]). Answers Hole 1 (cherry-picking): a manifest silent on a category it declared is non-conforming, not merely incomplete."
+    },
     "operator": {
       "type": "object",
       "required": ["name", "url", "operator_type", "disclosure"],
@@ -21,7 +25,13 @@
       }
     },
     "generated": {"type": "string", "description": "ISO-8601 timestamp"},
-    "rules": {"type": "object", "description": "The operator's stated conformance rules; corrections MUST be append-only."},
+    "rules": {
+      "type": "object",
+      "description": "The operator's stated conformance rules; corrections MUST be append-only.",
+      "properties": {
+        "materiality": {"type": "string", "description": "v0.2. One line stating what counts as material enough to require a claim (Hole 1)."}
+      }
+    },
     "claims": {
       "type": "array", "minItems": 1,
       "items": {
@@ -30,14 +40,34 @@
         "properties": {
           "id": {"type": "string", "pattern": "^[a-z0-9-]+$"},
           "date": {"type": "string"},
-          "category": {"enum": ["revenue", "delivery", "send", "correction", "grant", "infrastructure", "disclosure"]},
-          "claim": {"type": "string", "minLength": 1, "description": "One sentence, checkable. A claim without evidence is not a claim."},
+          "category": {"enum": ["revenue", "delivery", "send", "correction", "grant", "infrastructure", "disclosure", "challenge"]},
+          "claim": {"type": "string", "minLength": 1, "description": "One sentence, checkable. A claim without evidence is not a claim. category:\"challenge\" claims log a third party's \"missing claim\" question and the operator's answer (or its still-open status) — Hole 1's public challenge mechanism, using the same append-only claims array rather than a new system."},
           "evidence": {
             "type": "object", "required": ["type", "ref"],
-            "properties": {"type": {"enum": ["public-url", "platform-record", "ledger", "git-commit"]}, "ref": {"type": "string", "minLength": 1}}
+            "properties": {
+              "type": {"enum": ["public-url", "platform-record", "ledger", "git-commit"]},
+              "ref": {"type": "string", "minLength": 1},
+              "independence": {
+                "enum": ["third-party", "payment-processor", "own-site"],
+                "description": "v0.2. Who hosts/controls this evidence, most-independent first. Answers Hole 2 (self-referential evidence): labeled honestly, not hidden. A validator can report an independence breakdown; this does not gate conformance."
+              },
+              "excerpt": {
+                "type": "string",
+                "description": "v0.2. A short exact substring the evidence page/record should contain. Answers Hole 4 (reachability ≠ meaning): a validator can confirm the ref supports the claim's substance, not just that it returns 200."
+              }
+            }
           },
           "verifiability": {"enum": ["public", "on-request"]},
-          "corrects": {"type": "string", "description": "id of the claim this corrects; corrections are append-only, never rewrites"}
+          "corrects": {"type": "string", "description": "id of the claim this corrects; corrections are append-only, never rewrites"},
+          "confidence": {
+            "type": "object",
+            "description": "v0.2, optional. Answers Hole 6 (overstated confidence): a true claim can still overstate certainty.",
+            "required": ["level"],
+            "properties": {
+              "level": {"enum": ["certain", "estimated", "uncertain"]},
+              "caveat": {"type": "string", "description": "What's unresolved or approximate about this claim, in plain language."}
+            }
+          }
         }
       }
     }

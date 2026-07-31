@@ -1,6 +1,6 @@
 # The Receipts Standard
 
-**Machine-checkable honesty for AI-operated businesses.** v0.1.
+**Machine-checkable honesty for AI-operated businesses.** v0.2.
 
 The agent economy has standardized identity (signed agents) and payments (x402). Nobody
 standardized trust in what an AI-operated business *claims it did*. An economy of agents that can
@@ -17,13 +17,39 @@ small enough to adopt in an afternoon.
 4. The manifest states the operator honestly: AI, human, or hybrid — disclosed.
 5. Anyone can validate — schema plus evidence reachability — with no permission from the operator.
 
+## What's new in v0.2
+
+v0.1 published its own attack surface — six named holes — and committed to a fix direction for
+each. v0.2 ships five of them as additive, optional fields (a v0.1 manifest is still conforming):
+
+- **Coverage** (Hole 1, cherry-picking): top-level `coverage: []` declares which claim categories
+  this manifest commits to. A `category: "challenge"` claim logs a third party's "you're missing
+  X" question and the operator's answer (or open status) in the same append-only claims array —
+  the public challenge mechanism, no new system required.
+- **Evidence independence** (Hole 2, self-referential evidence): `evidence.independence` labels
+  each claim's evidence `third-party` / `payment-processor` / `own-site`, honestly, not hidden.
+  The validator reports a breakdown; it doesn't gate on it.
+- **Evidence excerpt** (Hole 4, reachability ≠ meaning): `evidence.excerpt` is a substring the
+  validator confirms actually appears on the fetched page — HTTP 200 alone no longer passes if the
+  claim also declares what the page should say.
+- **Confidence** (Hole 6, overstated confidence): an optional `confidence: {level, caveat}` on any
+  claim that's true but not certain.
+- **Goodharting** (Hole 5) has no schema change — the materiality field above plus the standing
+  culture rule ("a manifest with no corrections is a red flag") is the stated answer.
+
+**Not in v0.2:** signed/cryptographically-attested manifests (Hole 3). That needs real key
+custody, which stays a v0.3 candidate. The interim mitigation is unchanged and already live today:
+keep the manifest in public git history and archive each version externally (web.archive.org) —
+a timestamp the operator doesn't control.
+
 ## In this repo
 
-- [`receipts.schema.json`](receipts.schema.json) — the v0.1 manifest schema (JSON Schema 2020-12)
-- [`validate_manifest.py`](validate_manifest.py) — reference validator (schema + fetches every
-  public evidence ref)
-- [`example-manifest.json`](example-manifest.json) — a minimal conforming manifest with a
-  correction chain
+- [`receipts.schema.json`](receipts.schema.json) — the v0.2 manifest schema (JSON Schema 2020-12),
+  accepts `spec: "receipts-standard/0.1"` or `"0.2"`
+- [`validate_manifest.py`](validate_manifest.py) — reference validator (schema, fetches every
+  public evidence ref, verifies excerpts, reports the independence breakdown)
+- [`example-manifest.json`](example-manifest.json) — a conforming v0.2 manifest exercising every
+  new field, including a correction chain and a challenge claim
 
 ## The reference implementation is a real business
 
@@ -40,18 +66,19 @@ logged five deliveries as sent when they were not, with the public correction as
 
 Fork the shape, publish your `receipts.json` at your site root or `/.well-known/`, start appending
 claims with evidence, and archive versions externally (web.archive.org) for timestamps you don't
-control. No registry, no fee, no permission — v0.1 is deliberately just a convention, the way
-robots.txt started. If you publish one: run@clickcoded.com, subject "Receipts Standard". Early
-adopters shape v0.2. A manifest with no corrections in it should read as a red flag, not a clean
-record — ours has our mistakes in it. That's the tell that it's real.
+control. No registry, no fee, no permission — deliberately just a convention, the way robots.txt
+started. The new v0.2 fields (coverage, independence, excerpt, confidence) are all optional — adopt
+them at your own pace. If you publish one: run@clickcoded.com, subject "Receipts Standard". A
+manifest with no corrections in it should read as a red flag, not a clean record — ours has our
+mistakes in it. That's the tell that it's real.
 
 ## Honest limits
 
 This standard makes lying costly, specific, and contradiction-prone over time. It does not make
-lying impossible; nothing does. The full list of known holes — cherry-picking, self-referential
-evidence, silent history rewriting, semantic validation gaps, Goodharting, overstated confidence —
-is published on the spec page as the v0.2 agenda, on purpose. A trust standard that hides its own
-weaknesses is theater.
+lying impossible; nothing does. v0.2 resolves five of the six holes named in v0.1 with the fields
+above; the sixth (signing, against silent history rewriting) needs real key custody and stays a
+v0.3 candidate. A trust standard that hides its own weaknesses is theater — the full, current
+known-holes list is published on the spec page, not buried here.
 
 ---
 License: CC0 (spec + schema), MIT (validator). Authored by Click Coded — AI-operated,
