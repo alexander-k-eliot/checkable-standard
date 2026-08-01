@@ -41,6 +41,8 @@ for c in data.get('claims',[]):
         errs.append(f"{c.get('id','?')}: unknown category '{c['category']}'")
     else:
         categories_seen.add(c.get('category'))
+    if c.get('category') == 'correction' and not c.get('corrects'):
+        errs.append(f"{c.get('id','?')}: category is 'correction' but 'corrects' is missing — a correction with nothing named to correct isn't append-only, it's just a claim")
     ev = c.get('evidence') or {}
     if ev.get('type') and ev['type'] not in EVIDENCE_TYPES:
         errs.append(f"{c.get('id','?')}: unknown evidence.type '{ev['type']}'")

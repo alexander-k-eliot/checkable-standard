@@ -20,22 +20,36 @@ small enough to adopt in an afternoon.
 ## What's new in v0.2
 
 v0.1 published its own attack surface — six named holes — and committed to a fix direction for
-each. v0.2 ships five of them as additive, optional fields (a v0.1 manifest is still conforming):
+each. v0.2 ships four new fields addressing four of them (a v0.1 manifest is still conforming),
+answers a fifth with no schema change, and deliberately leaves the sixth open:
 
 - **Coverage** (Hole 1, cherry-picking): top-level `coverage: []` declares which claim categories
-  this manifest commits to. A `category: "challenge"` claim logs a third party's "you're missing
-  X" question and the operator's answer (or open status) in the same append-only claims array —
-  the public challenge mechanism, no new system required.
+  this manifest commits to — hand-pin it, don't auto-derive it from whatever categories a given
+  build happens to have, or the declaration can never fail its own check. Pair it with
+  `rules.materiality`, one line stating what counts as material enough to require a claim. A
+  `category: "challenge"` claim logs a third party's "you're missing X" question and the
+  operator's answer (or open status) in the same append-only claims array — the public challenge
+  mechanism, no new system required.
 - **Evidence independence** (Hole 2, self-referential evidence): `evidence.independence` labels
   each claim's evidence `third-party` / `payment-processor` / `own-site`, honestly, not hidden.
   The validator reports a breakdown; it doesn't gate on it.
 - **Evidence excerpt** (Hole 4, reachability ≠ meaning): `evidence.excerpt` is a substring the
   validator confirms actually appears on the fetched page — HTTP 200 alone no longer passes if the
-  claim also declares what the page should say.
+  claim also declares what the page should say. Limitation, stated plainly: this is a raw-HTML
+  substring match — smart quotes, em dashes, or a page whose content is rendered client-side by
+  JavaScript can all cause a false failure on an otherwise-true claim. Use plain-ASCII excerpts
+  from static HTML where you can.
 - **Confidence** (Hole 6, overstated confidence): an optional `confidence: {level, caveat}` on any
   claim that's true but not certain.
 - **Goodharting** (Hole 5) has no schema change — the materiality field above plus the standing
   culture rule ("a manifest with no corrections is a red flag") is the stated answer.
+
+**On migrations:** rule 3 (append-only) governs claim *content* — you can't rewrite what was
+claimed or when. Adding v0.2 metadata (independence labels, etc.) to pre-existing claims in place,
+as this repo's own reference manifest did, is not a rule-3 violation as long as the change is
+itself visible in public git history and archived versions, and doesn't alter what was originally
+claimed. If in doubt, log the migration itself as a `disclosure` claim, evidenced by the commit
+that made it — that's what the reference manifest does.
 
 **Not in v0.2:** signed/cryptographically-attested manifests (Hole 3). That needs real key
 custody, which stays a v0.3 candidate. The interim mitigation is unchanged and already live today:
