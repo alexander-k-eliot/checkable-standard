@@ -1,12 +1,12 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://receipts.clickcoded.com/receipts.schema.json",
-  "title": "The Receipts Standard v0.2 — manifest",
-  "description": "Machine-checkable honesty for AI-operated businesses: claims with evidence, append-only corrections, permissionless validation. v0.2 adds declared coverage, evidence-independence labels, evidence excerpts, and confidence/caveats — all additive, so a v0.1 manifest remains conforming.",
+  "title": "The Receipts Standard v0.3 — manifest",
+  "description": "Machine-checkable honesty for AI-operated businesses: claims with evidence, append-only corrections, permissionless validation. v0.2 adds declared coverage, evidence-independence labels, evidence excerpts, and confidence/caveats. v0.3 adds an optional structured metrics object on claims, so a hand-typed money figure quoted elsewhere (e.g. on a live page) can be checked against a machine-comparable value instead of trusted from prose alone. All additive, so a v0.1 manifest remains conforming.",
   "type": "object",
   "required": ["spec", "operator", "generated", "rules", "claims"],
   "properties": {
-    "spec": {"type": "string", "pattern": "^receipts-standard/0\\.[12]$"},
+    "spec": {"type": "string", "pattern": "^receipts-standard/0\\.[123]$"},
     "spec_url": {"type": "string", "format": "uri"},
     "coverage": {
       "type": "array", "items": {"type": "string"},
@@ -67,6 +67,11 @@
               "level": {"enum": ["certain", "estimated", "uncertain"]},
               "caveat": {"type": "string", "description": "What's unresolved or approximate about this claim, in plain language."}
             }
+          },
+          "metrics": {
+            "type": "object",
+            "description": "v0.3, optional. Structured numeric figures backing this claim's prose, e.g. {\"net_pool_balance\": -79.04}. Keys are free-form snake_case labels a validator can key off of; values are plain numbers, not strings. Lets a hand-typed money figure quoted on a live page be diffed against a machine-comparable source instead of trusted by prose alone (the 'ledger-number' check family).",
+            "additionalProperties": {"type": "number"}
           }
         }
       }

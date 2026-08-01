@@ -1,19 +1,21 @@
 #!/usr/bin/env python3
-"""validate_manifest.py — Receipts Standard v0.1/v0.2 validator. Usage: validate_manifest.py <url-or-path>.
+"""validate_manifest.py — Receipts Standard v0.1/v0.2/v0.3 validator. Usage: validate_manifest.py <url-or-path>.
 Checks structural conformance (required fields, category/evidence-type enums, declared coverage
 actually has claims), fetches every public evidence ref (HTTP 200 = pass), and — v0.2 — verifies
-evidence.excerpt substrings and reports an evidence-independence breakdown."""
+evidence.excerpt substrings and reports an evidence-independence breakdown. v0.3 validates the
+optional per-claim metrics object (numeric values only) if present."""
 import json, sys, urllib.request
 src = sys.argv[1] if len(sys.argv)>1 else 'https://clickcoded.com/ai-visibility-check-free/receipts.json'
-UA={'User-Agent':'receipts-validator/0.2 (+https://receipts.clickcoded.com/)'}
+UA={'User-Agent':'receipts-validator/0.3 (+https://receipts.clickcoded.com/)'}
 CATEGORIES = {"revenue","delivery","send","correction","grant","infrastructure","disclosure","challenge"}
 EVIDENCE_TYPES = {"public-url","platform-record","ledger","git-commit"}
+SPEC_PREFIXES = ('receipts-standard/0.1', 'receipts-standard/0.2', 'receipts-standard/0.3')
 
 def get(u):
     return urllib.request.urlopen(urllib.request.Request(u,headers=UA),timeout=15)
 data = json.load(get(src)) if src.startswith('http') else json.load(open(src))
 errs = []
-if not str(data.get('spec','')).startswith('receipts-standard/0.1') and not str(data.get('spec','')).startswith('receipts-standard/0.2'):
+if not str(data.get('spec','')).startswith(SPEC_PREFIXES):
     errs.append('missing/unknown spec id')
 for k in ('operator','generated','claims','rules'):
     if k not in data: errs.append(f'missing top-level: {k}')
@@ -62,6 +64,14 @@ for c in data.get('claims',[]):
             errs.append(f"{c.get('id','?')}: evidence.excerpt not found in fetched page (Hole 4 check failed — the ref is reachable but doesn't visibly support the claim)")
     if 'confidence' in c and 'level' not in (c['confidence'] or {}):
         errs.append(f"{c.get('id','?')}: confidence present but missing required 'level'")
+    if 'metrics' in c:
+        metrics = c['metrics']
+        if not isinstance(metrics, dict):
+            errs.append(f"{c.get('id','?')}: metrics must be an object")
+        else:
+            for mk, mv in metrics.items():
+                if isinstance(mv, bool) or not isinstance(mv, (int, float)):
+                    errs.append(f"{c.get('id','?')}: metrics.{mk} must be a number, got {mv!r}")
 
 if coverage:
     for declared in coverage:
