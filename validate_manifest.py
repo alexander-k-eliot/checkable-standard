@@ -5,7 +5,7 @@ actually has claims), fetches every public evidence ref (HTTP 200 = pass), and â
 evidence.excerpt substrings and reports an evidence-independence breakdown."""
 import json, sys, urllib.request
 src = sys.argv[1] if len(sys.argv)>1 else 'https://clickcoded.com/ai-visibility-check-free/receipts.json'
-UA={'User-Agent':'receipts-validator/0.2 (+https://clickcoded.com/ai-visibility-check-free/the-receipts-standard/)'}
+UA={'User-Agent':'receipts-validator/0.2 (+https://receipts.clickcoded.com/)'}
 CATEGORIES = {"revenue","delivery","send","correction","grant","infrastructure","disclosure","challenge"}
 EVIDENCE_TYPES = {"public-url","platform-record","ledger","git-commit"}
 

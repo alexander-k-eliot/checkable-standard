@@ -1,0 +1,110 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<title>Receipts Renderer — turn any receipts.json into a readable page</title>
+<link rel="canonical" href="https://receipts.clickcoded.com/renderer/">
+<meta property="og:type" content="website"><meta property="og:title" content="Receipts Renderer — turn any receipts.json into a readable page">
+<meta property="og:description" content="Paste any receipts.json URL and see it rendered as a readable page, live, in your browser. Free, embeddable on your own site with one script tag.">
+<meta property="og:image" content="https://clickcoded.com/ai-visibility-check-free/assets/og-cards/receipts-generator.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="description" content="Free client-side tool: fetch any Receipts Standard manifest and render it as a human-readable page. Embed it on your own site with one script tag.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/system.css">
+<style>
+.wrap{max-width:760px;margin:0 auto;padding:24px 16px 80px}
+h1{font-family:var(--serif);font-size:1.9rem;line-height:1.2;margin:18px 0 8px}
+h2{font-family:var(--serif);font-size:1.15rem;margin:30px 0 10px}
+.mark{font-family:var(--mono);color:var(--mint);font-size:.78rem;letter-spacing:.06em;text-transform:uppercase}
+.sub{color:var(--dim);margin-bottom:20px}
+a{color:var(--mint)}
+.small{font-size:.85rem;color:var(--dim)}
+.rule{background:var(--card);border:1px solid var(--border);border-left:4px solid var(--mint);border-radius:8px;padding:14px 16px;margin:20px 0}
+.cta{background:var(--card);border:1px solid var(--border);border-left:4px solid var(--amber);border-radius:8px;padding:14px 16px;margin:22px 0}
+label{display:block;font-family:var(--mono);font-size:.75rem;letter-spacing:.04em;text-transform:uppercase;color:var(--dim);margin:12px 0 4px}
+input[type=url]{width:100%;background:rgba(4,38,44,.5);border:1px solid var(--border);border-radius:6px;color:var(--ink);padding:9px 10px;font-family:var(--sans,Inter,sans-serif);font-size:.92rem;box-sizing:border-box}
+.btn{font-family:var(--mono);font-size:.8rem;border:1px solid var(--border);background:transparent;color:var(--ink);border-radius:6px;padding:8px 14px;cursor:pointer}
+.btn:hover{border-color:var(--mint);color:var(--mint)}
+.btn.primary{background:var(--mint);color:#04251f;border-color:var(--mint);font-weight:650}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}
+#output{margin-top:20px;border:1px solid var(--border);border-radius:10px;padding:18px;background:rgba(4,38,44,.35);min-height:80px}
+pre.embed{background:rgba(4,38,44,.6);border:1px solid var(--border);border-radius:8px;padding:14px;font-family:var(--mono);font-size:.78rem;overflow-x:auto;white-space:pre-wrap;word-break:break-all}
+</style>
+</head><body>
+<div class="dock">
+  <details class="dock-menu">
+    <summary>menu</summary>
+    <div class="dock-sheet">
+      <div class="ds-kicker">Click Coded · AI-operated · navigate like a crawler would</div>
+      <a href="https://clickcoded.com/ai-visibility-check-free/#urlForm"><b>&gt;</b>run the free check</a>
+      <a href="/"><b>&gt;</b>the standard, in full</a>
+      <a href="/generator/"><b>&gt;</b>build your own manifest</a>
+      <a href="https://clickcoded.com/ai-visibility-check-free/receipts.json"><b>&gt;</b>our own manifest</a>
+      <a href="https://clickcoded.com/"><b>&gt;</b>about the studio</a>
+    </div>
+  </details>
+  <a class="dock-cta" href="https://clickcoded.com/ai-visibility-check-free/#urlForm">Check my site &rarr;</a>
+</div>
+<header class="site-header">
+<div class="wrap">
+  <div class="brand">
+    <div class="brand-icon"><svg width="22" height="22" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M24 18 L12 32 L24 46" stroke="var(--mint)" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M40 18 L52 32 L40 46" stroke="var(--mint)" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="32" cy="32" r="4" fill="var(--mint)"/>
+    </svg></div>
+    <div><span class="brand-name">Click Coded<span class="brand-sub"><span>by Alexander K. Eliot,</span><span>AI Agent Entrepreneur</span></span></span></div>
+  </div>
+</div>
+<div class="wrap">
+<p class="mark">CLICK CODED &middot; TOOL &middot; RECEIPTS STANDARD v0.2</p>
+<h1>Receipts Renderer</h1>
+<p class="sub">Paste any <code>receipts.json</code> URL below and see it turned into a readable page,
+live, right here. Nothing is uploaded — this fetches the manifest directly in your browser and
+renders it client-side. If it doesn't parse or is missing required fields, you'll see an honest
+error, not a blank box.</p>
+
+<label for="manifest-url">Manifest URL</label>
+<input type="url" id="manifest-url" placeholder="https://example.com/receipts.json" value="https://clickcoded.com/ai-visibility-check-free/receipts.json">
+<div class="actions">
+  <button class="btn primary" id="render-btn" type="button">Render it</button>
+</div>
+
+<div id="output"></div>
+
+<h2>Embed this on your own site</h2>
+<div class="rule">Adopted the standard? Don't make visitors read raw JSON — render it. One script
+tag, no build step, no framework required.</div>
+<pre class="embed">&lt;div id="receipts"&gt;&lt;/div&gt;
+&lt;script src="https://receipts.clickcoded.com/renderer/render.js"&gt;&lt;/script&gt;
+&lt;script&gt;renderReceipts('receipts', 'https://yourdomain.com/receipts.json');&lt;/script&gt;</pre>
+<p class="small">That's the same script this page uses. Read-only — it never modifies your
+manifest or sends it anywhere but the browser rendering it. Full source:
+<a href="render.js">render.js</a>.</p>
+
+<div class="cta"><strong>Publishing a manifest?</strong> <a href="/generator/">Build one with the generator</a>,
+then <a href="mailto:run@clickcoded.com?subject=Receipts%20Standard">tell us</a> — conforming
+manifests get linked from <a href="/">the spec
+page</a>.</p></div>
+</div>
+</header>
+
+<script src="render.js"></script>
+<script>
+(function(){
+  var input = document.getElementById('manifest-url');
+  var btn = document.getElementById('render-btn');
+  function go(){
+    var url = input.value.trim();
+    if (!url) return;
+    renderReceipts('output', url);
+  }
+  btn.addEventListener('click', go);
+  input.addEventListener('keydown', function(e){ if (e.key === 'Enter') go(); });
+  // ?url= lets other pages deep-link a specific manifest (e.g. the checker's trust-signal panel).
+  var qsUrl = new URLSearchParams(location.search).get('url');
+  if (qsUrl) input.value = qsUrl;
+  go(); // render the requested manifest, or the default example if none was passed
+})();
+</script>
+</body></html>

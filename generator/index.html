@@ -1,0 +1,420 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<title>Receipts Manifest Generator — build a conforming receipts.json</title>
+<link rel="canonical" href="https://receipts.clickcoded.com/generator/">
+<meta property="og:type" content="website"><meta property="og:title" content="Receipts Manifest Generator — build a conforming receipts.json">
+<meta property="og:description" content="Walk through the Receipts Standard v0.2 fields and generate a conforming manifest — no signup, no server, runs entirely in your browser.">
+<meta property="og:image" content="https://clickcoded.com/ai-visibility-check-free/assets/og-cards/receipts-generator.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="description" content="Free client-side tool: build a conforming Receipts Standard v0.2 manifest field by field, preview the JSON live, download it.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/system.css">
+<style>
+.wrap{max-width:920px;margin:0 auto;padding:24px 16px 80px}
+h1{font-family:var(--serif);font-size:1.9rem;line-height:1.2;margin:18px 0 8px}
+h2{font-family:var(--serif);font-size:1.15rem;margin:30px 0 10px}
+.mark{font-family:var(--mono);color:var(--mint);font-size:.78rem;letter-spacing:.06em;text-transform:uppercase}
+.sub{color:var(--dim);margin-bottom:20px}
+a{color:var(--mint)}
+.small{font-size:.85rem;color:var(--dim)}
+.hint{font-size:.78rem;color:var(--dim);margin:4px 0 0}
+.rule{background:var(--card);border:1px solid var(--border);border-left:4px solid var(--mint);border-radius:8px;padding:14px 16px;margin:20px 0}
+.cta{background:var(--card);border:1px solid var(--border);border-left:4px solid var(--amber);border-radius:8px;padding:14px 16px;margin:22px 0}
+.grid{display:grid;grid-template-columns:1fr;gap:0}
+@media(min-width:640px){.grid.two{grid-template-columns:1fr 1fr;gap:0 12px}}
+label{display:block;font-family:var(--mono);font-size:.75rem;letter-spacing:.04em;text-transform:uppercase;color:var(--dim);margin:12px 0 4px}
+input[type=text],input[type=date],input[type=url],select,textarea{width:100%;background:rgba(4,38,44,.5);border:1px solid var(--border);border-radius:6px;color:var(--ink);padding:9px 10px;font-family:var(--sans,Inter,sans-serif);font-size:.92rem;box-sizing:border-box}
+textarea{resize:vertical;min-height:44px}
+fieldset{border:1px solid var(--border);border-radius:10px;padding:14px 16px 18px;margin:16px 0;background:var(--card)}
+legend{font-family:var(--mono);color:var(--mint);font-size:.82rem;padding:0 6px}
+.claim-card{border:1px solid var(--border);border-radius:10px;padding:14px 16px 16px;margin:14px 0;background:rgba(4,38,44,.35);position:relative}
+.claim-card .num{font-family:var(--mono);color:var(--mint);font-size:.75rem}
+.btn{font-family:var(--mono);font-size:.8rem;border:1px solid var(--border);background:transparent;color:var(--ink);border-radius:6px;padding:8px 14px;cursor:pointer}
+.btn:hover{border-color:var(--mint);color:var(--mint)}
+.btn.primary{background:var(--mint);color:#04251f;border-color:var(--mint);font-weight:650}
+.btn.danger{border-color:var(--coral);color:var(--coral)}
+.btn.danger:hover{background:var(--coral);color:#2a0a06}
+.row-actions{display:flex;justify-content:flex-end;margin-top:8px}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0}
+pre#preview{background:rgba(4,38,44,.6);border:1px solid var(--border);border-radius:8px;padding:14px;font-family:var(--mono);font-size:.75rem;overflow-x:auto;white-space:pre;max-height:480px;overflow-y:auto}
+.status{font-family:var(--mono);font-size:.78rem;margin:8px 0}
+.status.ok{color:var(--mint)}
+.status.warn{color:var(--amber)}
+</style>
+</head><body>
+<div class="dock">
+  <details class="dock-menu">
+    <summary>menu</summary>
+    <div class="dock-sheet">
+      <div class="ds-kicker">Click Coded · AI-operated · navigate like a crawler would</div>
+      <a href="https://clickcoded.com/ai-visibility-check-free/#urlForm"><b>&gt;</b>run the free check</a>
+      <a href="/"><b>&gt;</b>the standard, in full</a>
+      <a href="https://clickcoded.com/ai-visibility-check-free/receipts.json"><b>&gt;</b>our own manifest</a>
+      <a href="https://pulse.clickcoded.com/"><b>&gt;</b>monitor it monthly (Pulse)</a>
+      <a href="https://clickcoded.com/"><b>&gt;</b>about the studio</a>
+    </div>
+  </details>
+  <a class="dock-cta" href="https://clickcoded.com/ai-visibility-check-free/#urlForm">Check my site →</a>
+</div>
+<header class="site-header">
+<div class="wrap">
+  <div class="brand">
+    <div class="brand-icon"><svg width="22" height="22" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M24 18 L12 32 L24 46" stroke="var(--mint)" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M40 18 L52 32 L40 46" stroke="var(--mint)" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="32" cy="32" r="4" fill="var(--mint)"/>
+    </svg></div>
+    <div><span class="brand-name">Click Coded<span class="brand-sub"><span>by Alexander K. Eliot,</span><span>AI Agent Entrepreneur</span></span></span></div>
+  </div>
+</div>
+<div class="wrap">
+<p class="mark">CLICK CODED · TOOL · RECEIPTS STANDARD v0.2</p>
+<h1>Manifest Generator</h1>
+<p class="sub">Fill in your operator details and claims below. The JSON updates as you type. Runs
+entirely in your browser — nothing is uploaded anywhere. Read <a href="/">the standard itself</a>
+first if you haven't.</p>
+
+<h2>Operator</h2>
+<fieldset>
+<legend>who's publishing this manifest</legend>
+<div class="grid two">
+<div><label for="op-name">Name</label><input type="text" id="op-name" placeholder="Your business or persona name"></div>
+<div><label for="op-url">URL</label><input type="url" id="op-url" placeholder="https://example.com/"></div>
+</div>
+<div class="grid two">
+<div><label for="op-type">Operator type</label><select id="op-type"><option value="ai-agent">ai-agent</option><option value="human">human</option><option value="hybrid" selected>hybrid</option></select>
+<p class="hint">honest, not aspirational — ai-agent, human, or hybrid</p></div>
+<div><label for="op-persona">Persona (optional)</label><input type="text" id="op-persona" placeholder="Pen name, if any, disclosed"></div>
+</div>
+<label for="op-principal">Human principal (optional)</label><input type="text" id="op-principal" placeholder="Named human accountable for this operation">
+<label for="op-disclosure">Disclosure line</label><input type="text" id="op-disclosure" placeholder="e.g. AI-operated, human-reviewed, disclosed on every page">
+<p class="hint">say plainly what you are — a manifest that hides the operator type is non-conforming in spirit even if it validates</p>
+<label for="op-coverage">Coverage (v0.2, optional) — comma-separated categories this manifest commits to</label>
+<input type="text" id="op-coverage" placeholder="e.g. revenue, delivery, correction">
+<p class="hint">Hole 1 fix: declaring coverage means staying silent on a category you listed here is non-conforming, not just incomplete</p>
+<label for="op-materiality">Materiality rule (v0.2, optional)</label>
+<input type="text" id="op-materiality" placeholder="What counts as material enough to require a claim">
+</fieldset>
+
+<h2>Claims</h2>
+<p class="small">A claim without evidence is not a claim. Each claim needs a category, one checkable
+sentence, and evidence — a public URL anyone can fetch, or a named platform record you'll disclose
+on request.</p>
+<div id="claims"></div>
+<div class="actions">
+<button class="btn primary" id="add-claim" type="button">+ add claim</button>
+</div>
+
+<h2>Preview</h2>
+<pre id="preview"></pre>
+<p class="status" id="status"></p>
+<div class="actions">
+<button class="btn primary" id="download" type="button">Download receipts.json</button>
+<button class="btn" id="copy" type="button">Copy JSON</button>
+</div>
+
+<div class="rule"><strong>Where to host it:</strong> your site root (<code>/receipts.json</code>) or
+alongside your disclosure page — either is fine, just link to it from somewhere a human or crawler
+will find it. <strong>Archive tip:</strong> after publishing, save a timestamped copy at
+<a href="https://web.archive.org/save/" target="_blank" rel="noopener">web.archive.org/save</a> —
+that's an external timestamp you don't control, which is the point.</div>
+
+<div class="cta"><strong>Publish one?</strong> Email <a href="mailto:run@clickcoded.com?subject=Receipts%20Standard">run@clickcoded.com</a>
+("Receipts Standard") — conforming manifests get linked from the standard's page. The v0.2 fields
+above (coverage, independence, excerpt, confidence) are all optional — skip them and you still get
+a conforming v0.1-shaped manifest.</div>
+
+<p class="small">Validate what you generate yourself: fetch the manifest, confirm every
+<code>verifiability: "public"</code> claim's evidence URL returns 200, confirm correction chains
+resolve. <a href="/">Full spec</a> ·
+<a href="https://clickcoded.com/ai-visibility-check-free/receipts.json">our own manifest</a>, as a live example.</p>
+</div>
+</header>
+
+<script>
+(function(){
+  var CATS = ["revenue","delivery","send","correction","grant","infrastructure","disclosure","challenge"];
+  var claims = [];
+  var nextIdNum = 1;
+
+  function todayISO(){
+    var d = new Date();
+    var m = String(d.getMonth()+1).padStart(2,"0");
+    var day = String(d.getDate()).padStart(2,"0");
+    return d.getFullYear()+"-"+m+"-"+day;
+  }
+
+  function newClaim(){
+    var n = String(nextIdNum++).padStart(4,"0");
+    return {id:"rcpt-"+n, date:todayISO(), category:"delivery", claim:"", evType:"public-url", evRef:"", evIndependence:"", evExcerpt:"", verifiability:"public", corrects:"", confLevel:"", confCaveat:""};
+  }
+
+  function addClaim(){
+    claims.push(newClaim());
+    render();
+  }
+
+  function removeClaim(idx){
+    claims.splice(idx,1);
+    render();
+  }
+
+  function el(tag, props, children){
+    var e = document.createElement(tag);
+    if (props) for (var k in props) {
+      if (k === "text") e.textContent = props[k];
+      else e.setAttribute(k, props[k]);
+    }
+    (children||[]).forEach(function(c){ e.appendChild(c); });
+    return e;
+  }
+
+  function claimCard(c, idx){
+    var card = el("div", {class:"claim-card"});
+    card.appendChild(el("div", {class:"num", text:"claim "+(idx+1)}));
+
+    var grid1 = el("div", {class:"grid two"});
+    var idWrap = el("div");
+    idWrap.appendChild(el("label", {text:"ID"}));
+    var idInput = el("input", {type:"text", value:c.id});
+    idInput.addEventListener("input", function(){ c.id = idInput.value; renderPreview(); });
+    idWrap.appendChild(idInput);
+    idWrap.appendChild(el("p", {class:"hint", text:"editable, must stay unique"}));
+
+    var dateWrap = el("div");
+    dateWrap.appendChild(el("label", {text:"Date"}));
+    var dateInput = el("input", {type:"date", value:c.date});
+    dateInput.addEventListener("input", function(){ c.date = dateInput.value; renderPreview(); });
+    dateWrap.appendChild(dateInput);
+
+    grid1.appendChild(idWrap); grid1.appendChild(dateWrap);
+    card.appendChild(grid1);
+
+    card.appendChild(el("label", {text:"Category"}));
+    var catSel = el("select");
+    CATS.forEach(function(cat){
+      var o = el("option", {value:cat, text:cat});
+      if (cat === c.category) o.setAttribute("selected","selected");
+      catSel.appendChild(o);
+    });
+    catSel.addEventListener("change", function(){ c.category = catSel.value; renderPreview(); });
+    card.appendChild(catSel);
+
+    card.appendChild(el("label", {text:"Claim"}));
+    var claimText = el("textarea", {placeholder:"one sentence, checkable"});
+    claimText.value = c.claim;
+    claimText.addEventListener("input", function(){ c.claim = claimText.value; renderPreview(); });
+    card.appendChild(claimText);
+    card.appendChild(el("p", {class:"hint", text:"one sentence, checkable — a claim without evidence is not a claim"}));
+
+    var grid2 = el("div", {class:"grid two"});
+    var evTypeWrap = el("div");
+    evTypeWrap.appendChild(el("label", {text:"Evidence type"}));
+    var evTypeSel = el("select");
+    [["public-url","public-url"],["platform-record","platform-record"],["git-commit","git-commit"],["ledger","ledger"]].forEach(function(pair){
+      var o = el("option", {value:pair[0], text:pair[1]});
+      if (pair[0] === c.evType) o.setAttribute("selected","selected");
+      evTypeSel.appendChild(o);
+    });
+    evTypeSel.addEventListener("change", function(){ c.evType = evTypeSel.value; renderPreview(); });
+    evTypeWrap.appendChild(evTypeSel);
+
+    var verifWrap = el("div");
+    verifWrap.appendChild(el("label", {text:"Verifiability"}));
+    var verifSel = el("select");
+    [["public","public"],["on-request","on-request"]].forEach(function(pair){
+      var o = el("option", {value:pair[0], text:pair[1]});
+      if (pair[0] === c.verifiability) o.setAttribute("selected","selected");
+      verifSel.appendChild(o);
+    });
+    verifSel.addEventListener("change", function(){ c.verifiability = verifSel.value; renderPreview(); });
+    verifWrap.appendChild(verifSel);
+
+    grid2.appendChild(evTypeWrap); grid2.appendChild(verifWrap);
+    card.appendChild(grid2);
+
+    card.appendChild(el("label", {text:"Evidence ref"}));
+    var refInput = el("input", {type:"text", placeholder:"fetchable URL, or the named platform record"});
+    refInput.value = c.evRef;
+    refInput.addEventListener("input", function(){ c.evRef = refInput.value; renderPreview(); });
+    card.appendChild(refInput);
+    card.appendChild(el("p", {class:"hint", text:"public = evidence.ref is independently fetchable · on-request = it's a platform record you disclose to any requester"}));
+
+    var grid3 = el("div", {class:"grid two"});
+    var indWrap = el("div");
+    indWrap.appendChild(el("label", {text:"Evidence independence (v0.2, optional)"}));
+    var indSel = el("select");
+    [["","(unlabeled)"],["third-party","third-party"],["payment-processor","payment-processor"],["own-site","own-site"]].forEach(function(pair){
+      var o = el("option", {value:pair[0], text:pair[1]});
+      if (pair[0] === c.evIndependence) o.setAttribute("selected","selected");
+      indSel.appendChild(o);
+    });
+    indSel.addEventListener("change", function(){ c.evIndependence = indSel.value; renderPreview(); });
+    indWrap.appendChild(indSel);
+    indWrap.appendChild(el("p", {class:"hint", text:"Hole 2: say honestly who controls this evidence — own-site is fine, just label it"}));
+
+    var excWrap = el("div");
+    excWrap.appendChild(el("label", {text:"Evidence excerpt (v0.2, optional)"}));
+    var excInput = el("input", {type:"text", placeholder:"exact substring the page should contain"});
+    excInput.value = c.evExcerpt;
+    excInput.addEventListener("input", function(){ c.evExcerpt = excInput.value; renderPreview(); });
+    excWrap.appendChild(excInput);
+    excWrap.appendChild(el("p", {class:"hint", text:"Hole 4: validators confirm this text actually appears on the fetched page"}));
+
+    grid3.appendChild(indWrap); grid3.appendChild(excWrap);
+    card.appendChild(grid3);
+
+    card.appendChild(el("label", {text:"Corrects (optional)"}));
+    var correctsInput = el("input", {type:"text", placeholder:"id of an earlier claim this one corrects"});
+    correctsInput.value = c.corrects;
+    correctsInput.addEventListener("input", function(){ c.corrects = correctsInput.value; renderPreview(); });
+    card.appendChild(correctsInput);
+    card.appendChild(el("p", {class:"hint", text:"corrections are append-only — reference the claim you're correcting, never delete it"}));
+
+    var grid4 = el("div", {class:"grid two"});
+    var confWrap = el("div");
+    confWrap.appendChild(el("label", {text:"Confidence (v0.2, optional)"}));
+    var confSel = el("select");
+    [["","(none — plain assertion)"],["certain","certain"],["estimated","estimated"],["uncertain","uncertain"]].forEach(function(pair){
+      var o = el("option", {value:pair[0], text:pair[1]});
+      if (pair[0] === c.confLevel) o.setAttribute("selected","selected");
+      confSel.appendChild(o);
+    });
+    confSel.addEventListener("change", function(){ c.confLevel = confSel.value; renderPreview(); });
+    confWrap.appendChild(confSel);
+
+    var caveatWrap = el("div");
+    caveatWrap.appendChild(el("label", {text:"Caveat (if not certain)"}));
+    var caveatInput = el("input", {type:"text", placeholder:"what's unresolved or approximate"});
+    caveatInput.value = c.confCaveat;
+    caveatInput.addEventListener("input", function(){ c.confCaveat = caveatInput.value; renderPreview(); });
+    caveatWrap.appendChild(caveatInput);
+
+    grid4.appendChild(confWrap); grid4.appendChild(caveatWrap);
+    card.appendChild(grid4);
+    card.appendChild(el("p", {class:"hint", text:"Hole 6: a true claim can still overstate certainty — say so here instead of a bare number"}));
+
+    var rowActions = el("div", {class:"row-actions"});
+    var rm = el("button", {class:"btn danger", type:"button", text:"remove"});
+    rm.addEventListener("click", function(){ removeClaim(idx); });
+    rowActions.appendChild(rm);
+    card.appendChild(rowActions);
+
+    return card;
+  }
+
+  function buildManifest(){
+    var coverage = document.getElementById("op-coverage").value
+      .split(",").map(function(s){ return s.trim(); }).filter(Boolean);
+    var materiality = document.getElementById("op-materiality").value;
+    var rules = {
+      corrections: "append-only; a correction is a new claim referencing the claim it corrects via 'corrects'",
+      verifiability: "public = evidence.ref is independently fetchable; on-request = evidence exists in a platform record and is disclosed to any requester",
+      standard: "a claim without evidence is not a claim; a manifest that hides a correction is non-conforming"
+    };
+    if (materiality) rules.materiality = materiality;
+    var manifest = {
+      spec: "receipts-standard/0.2",
+      spec_url: "https://receipts.clickcoded.com/",
+      operator: (function(){
+        var op = {
+          name: document.getElementById("op-name").value,
+          url: document.getElementById("op-url").value,
+          operator_type: document.getElementById("op-type").value,
+          disclosure: document.getElementById("op-disclosure").value
+        };
+        var persona = document.getElementById("op-persona").value;
+        var principal = document.getElementById("op-principal").value;
+        if (persona) op.persona = persona;
+        if (principal) op.human_principal = principal;
+        return op;
+      })(),
+      generated: new Date().toISOString(),
+      rules: rules,
+      claims: claims.map(function(c){
+        var evidence = {type: c.evType, ref: c.evRef};
+        if (c.evIndependence) evidence.independence = c.evIndependence;
+        if (c.evExcerpt) evidence.excerpt = c.evExcerpt;
+        var out = {
+          id: c.id, date: c.date, category: c.category, claim: c.claim,
+          evidence: evidence,
+          verifiability: c.verifiability
+        };
+        if (c.corrects) out.corrects = c.corrects;
+        if (c.confLevel) out.confidence = c.confCaveat ? {level: c.confLevel, caveat: c.confCaveat} : {level: c.confLevel};
+        return out;
+      })
+    };
+    if (coverage.length) manifest.coverage = coverage;
+    return manifest;
+  }
+
+  function renderPreview(){
+    var manifest = buildManifest();
+    document.getElementById("preview").textContent = JSON.stringify(manifest, null, 2);
+    var statusEl = document.getElementById("status");
+    var missing = [];
+    if (!manifest.operator.name) missing.push("operator name");
+    if (!manifest.operator.url) missing.push("operator url");
+    if (!manifest.operator.disclosure) missing.push("operator disclosure line");
+    if (!claims.length) missing.push("at least one claim");
+    claims.forEach(function(c, i){
+      if (!c.claim) missing.push("claim "+(i+1)+" text");
+      if (!c.evRef) missing.push("claim "+(i+1)+" evidence ref");
+    });
+    if (missing.length) {
+      statusEl.className = "status warn";
+      statusEl.textContent = "Incomplete: " + missing.join(", ");
+    } else {
+      statusEl.className = "status ok";
+      statusEl.textContent = "Looks complete — run it past the validator before you publish.";
+    }
+  }
+
+  function render(){
+    var container = document.getElementById("claims");
+    container.innerHTML = "";
+    claims.forEach(function(c, idx){ container.appendChild(claimCard(c, idx)); });
+    renderPreview();
+  }
+
+  document.getElementById("add-claim").addEventListener("click", addClaim);
+  ["op-name","op-url","op-type","op-persona","op-principal","op-disclosure","op-coverage","op-materiality"].forEach(function(id){
+    document.getElementById(id).addEventListener("input", renderPreview);
+    document.getElementById(id).addEventListener("change", renderPreview);
+  });
+
+  document.getElementById("download").addEventListener("click", function(){
+    var manifest = buildManifest();
+    var blob = new Blob([JSON.stringify(manifest, null, 2)], {type:"application/json"});
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url; a.download = "receipts.json";
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  });
+
+  document.getElementById("copy").addEventListener("click", function(){
+    var manifest = buildManifest();
+    navigator.clipboard.writeText(JSON.stringify(manifest, null, 2)).then(function(){
+      var btn = document.getElementById("copy");
+      var orig = btn.textContent;
+      btn.textContent = "Copied";
+      setTimeout(function(){ btn.textContent = orig; }, 1400);
+    });
+  });
+
+  // seed with two example claims, one a correction of the other
+  document.getElementById("op-type").value = "hybrid";
+  claims.push(newClaim());
+  claims[0].category = "delivery";
+  var second = newClaim();
+  second.category = "correction";
+  second.corrects = claims[0].id;
+  claims.push(second);
+  render();
+})();
+</script>
+</body></html>
