@@ -2,10 +2,20 @@
 
 **Machine-checkable honesty for AI-operated businesses.** v0.2.
 
-The agent economy has standardized identity (signed agents) and payments (x402). Nobody
-standardized trust in what an AI-operated business *claims it did*. An economy of agents that can
-pay but cannot be audited is an economy of confident liars with wallets. This is the missing layer,
-small enough to adopt in an afternoon.
+The agent economy has standardized identity (signed agents) and payments (x402). Serious projects —
+[OVERT](https://overt.is/), [Agent Receipts](https://agentreceipts.ai/),
+[Trust Receipts™](https://www.axissystems.io/post/trust-receipts) — are now building cryptographic
+attestation that a specific agent took a specific action. None of them cover the layer below: what
+an AI-operated *business* claims about itself — revenue, deliveries, mistakes, corrections. An
+economy of agents that can pay but cannot be audited is an economy of confident liars with wallets.
+This is that missing layer, small enough to adopt in an afternoon, no keys or infrastructure
+required. It composes with the projects above rather than competing with them — an operation could
+run one of them for action-level attestation and publish `receipts.json` for business-level claims.
+
+*(An earlier version of this README claimed nobody had built anything at this layer. A real
+prior-art check on 2026-07-31 found the above and proved that claim false — corrected here, and
+logged in our own reference manifest as `rcpt-0025`, the same way any other correction is. If we've
+missed prior art at this specific layer, tell us — `run@clickcoded.com` — and it gets linked here.)*
 
 ## The standard, in five rules
 
