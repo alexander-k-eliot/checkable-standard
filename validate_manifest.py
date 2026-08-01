@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
 """validate_manifest.py — Receipts Standard v0.1/v0.2 validator. Usage: validate_manifest.py <url-or-path>.
-Checks schema conformance, fetches every public evidence ref (HTTP 200 = pass), and — v0.2 —
-verifies evidence.excerpt substrings and reports an evidence-independence breakdown."""
+Checks structural conformance (required fields, category/evidence-type enums, declared coverage
+actually has claims), fetches every public evidence ref (HTTP 200 = pass), and — v0.2 — verifies
+evidence.excerpt substrings and reports an evidence-independence breakdown."""
 import json, sys, urllib.request
 src = sys.argv[1] if len(sys.argv)>1 else 'https://clickcoded.com/ai-visibility-check-free/receipts.json'
 UA={'User-Agent':'receipts-validator/0.2 (+https://clickcoded.com/ai-visibility-check-free/the-receipts-standard/)'}
+CATEGORIES = {"revenue","delivery","send","correction","grant","infrastructure","disclosure","challenge"}
+EVIDENCE_TYPES = {"public-url","platform-record","ledger","git-commit"}
+
 def get(u):
     return urllib.request.urlopen(urllib.request.Request(u,headers=UA),timeout=15)
 data = json.load(get(src)) if src.startswith('http') else json.load(open(src))
@@ -13,33 +17,54 @@ if not str(data.get('spec','')).startswith('receipts-standard/0.1') and not str(
     errs.append('missing/unknown spec id')
 for k in ('operator','generated','claims','rules'):
     if k not in data: errs.append(f'missing top-level: {k}')
-if 'coverage' in data and not isinstance(data['coverage'], list):
+operator = data.get('operator') or {}
+for k in ('name','url','operator_type','disclosure'):
+    if not operator.get(k): errs.append(f"operator: missing or empty required field '{k}'")
+coverage = data.get('coverage')
+if coverage is not None and not isinstance(coverage, list):
     errs.append('coverage must be a list of category strings')
+    coverage = None
+
 ids=set()
 independence_counts = {}
+categories_seen = set()
 for c in data.get('claims',[]):
     for k in ('id','date','category','claim','evidence','verifiability'):
         if k not in c: errs.append(f"{c.get('id','?')}: missing {k}")
-    if c['id'] in ids: errs.append(f"duplicate id {c['id']}")
-    ids.add(c['id'])
-    if c.get('corrects') and c['corrects'] not in ids: errs.append(f"{c['id']}: corrects unknown claim")
-    ev = c.get('evidence', {})
+    cid = c.get('id')
+    if cid is not None:
+        if cid in ids: errs.append(f"duplicate id {cid}")
+        ids.add(cid)
+    if c.get('corrects') and c['corrects'] not in ids:
+        errs.append(f"{c.get('id','?')}: corrects unknown claim")
+    if c.get('category') and c['category'] not in CATEGORIES:
+        errs.append(f"{c.get('id','?')}: unknown category '{c['category']}'")
+    else:
+        categories_seen.add(c.get('category'))
+    ev = c.get('evidence') or {}
+    if ev.get('type') and ev['type'] not in EVIDENCE_TYPES:
+        errs.append(f"{c.get('id','?')}: unknown evidence.type '{ev['type']}'")
     independence_counts[ev.get('independence', 'unlabeled')] = independence_counts.get(ev.get('independence', 'unlabeled'), 0) + 1
     body = None
-    if c.get('verifiability')=='public':
+    if c.get('verifiability')=='public' and ev.get('ref'):
         try:
             resp = get(ev['ref'])
             code = resp.status
-            if code!=200: errs.append(f"{c['id']}: evidence fetch {code}")
+            if code!=200: errs.append(f"{c.get('id','?')}: evidence fetch {code}")
             elif ev.get('excerpt'):
                 body = resp.read().decode('utf-8', errors='ignore')
         except Exception as e:
-            errs.append(f"{c['id']}: evidence unreachable ({e})")
+            errs.append(f"{c.get('id','?')}: evidence unreachable ({e})")
     if ev.get('excerpt') and c.get('verifiability')=='public' and body is not None:
         if ev['excerpt'] not in body:
-            errs.append(f"{c['id']}: evidence.excerpt not found in fetched page (Hole 4 check failed — the ref is reachable but doesn't visibly support the claim)")
-    if 'confidence' in c and 'level' not in c['confidence']:
-        errs.append(f"{c['id']}: confidence present but missing required 'level'")
+            errs.append(f"{c.get('id','?')}: evidence.excerpt not found in fetched page (Hole 4 check failed — the ref is reachable but doesn't visibly support the claim)")
+    if 'confidence' in c and 'level' not in (c['confidence'] or {}):
+        errs.append(f"{c.get('id','?')}: confidence present but missing required 'level'")
+
+if coverage:
+    for declared in coverage:
+        if declared not in categories_seen:
+            errs.append(f"coverage declares '{declared}' but no claim of that category exists (Hole 1: a manifest silent on a declared category is non-conforming)")
 
 if errs:
     print('\n'.join(errs))

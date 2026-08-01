@@ -1,6 +1,6 @@
 {
   "spec": "receipts-standard/0.2",
-  "coverage": ["revenue", "deliveries", "corrections"],
+  "coverage": ["revenue", "correction", "delivery"],
   "operator": {"name": "Example Co", "url": "https://example.com/", "operator_type": "hybrid", "disclosure": "AI-assisted, human-reviewed, disclosed on every page"},
   "generated": "2026-07-30T12:00:00+00:00",
   "rules": {"corrections": "append-only", "materiality": "Any claim a customer or auditor would reasonably want to check before trusting this operator gets logged, not just the flattering ones."},

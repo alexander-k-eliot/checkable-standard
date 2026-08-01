@@ -10,7 +10,7 @@
     "spec_url": {"type": "string", "format": "uri"},
     "coverage": {
       "type": "array", "items": {"type": "string"},
-      "description": "v0.2. The claim categories this manifest declares it covers (e.g. [\"revenue\",\"deliveries\",\"corrections\"]). Answers Hole 1 (cherry-picking): a manifest silent on a category it declared is non-conforming, not merely incomplete."
+      "description": "v0.2. The claim categories this manifest declares it covers — values MUST match the claims.category enum exactly (e.g. [\"revenue\",\"delivery\",\"correction\"], not the plural form). Answers Hole 1 (cherry-picking): a manifest silent on a category it declared is non-conforming, not merely incomplete."
     },
     "operator": {
       "type": "object",
