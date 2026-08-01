@@ -1,4 +1,4 @@
-// Receipts Standard renderer (Priority Goal 1B, Phase 0, 2026-07-31).
+// Checkable Standard renderer (Priority Goal 1B, Phase 0, 2026-07-31). Formerly Receipts Standard renderer.
 // Embeddable, no build step, no framework. Any site can drop this in:
 //   <div id="receipts"></div>
 //   <script src="https://receipts.clickcoded.com/renderer/render.js"></script>

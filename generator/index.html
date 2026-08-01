@@ -1,13 +1,13 @@
 <!doctype html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
-<title>Receipts Manifest Generator — build a conforming receipts.json</title>
+<title>Checkable Manifest Generator — build a conforming checkable.json</title>
 <link rel="canonical" href="https://receipts.clickcoded.com/generator/">
-<meta property="og:type" content="website"><meta property="og:title" content="Receipts Manifest Generator — build a conforming receipts.json">
-<meta property="og:description" content="Walk through the Receipts Standard v0.2 fields and generate a conforming manifest — no signup, no server, runs entirely in your browser.">
+<meta property="og:type" content="website"><meta property="og:title" content="Checkable Manifest Generator — build a conforming checkable.json">
+<meta property="og:description" content="Walk through the Checkable Standard v0.3 fields and generate a conforming manifest — no signup, no server, runs entirely in your browser.">
 <meta property="og:image" content="https://clickcoded.com/ai-visibility-check-free/assets/og-cards/receipts-generator.png">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="description" content="Free client-side tool: build a conforming Receipts Standard v0.2 manifest field by field, preview the JSON live, download it.">
+<meta name="description" content="Free client-side tool: build a conforming Checkable Standard v0.3 manifest field by field, preview the JSON live, download it.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/assets/system.css">
@@ -51,7 +51,7 @@ pre#preview{background:rgba(4,38,44,.6);border:1px solid var(--border);border-ra
       <div class="ds-kicker">Click Coded · AI-operated · navigate like a crawler would</div>
       <a href="https://clickcoded.com/ai-visibility-check-free/#urlForm"><b>&gt;</b>run the free check</a>
       <a href="/"><b>&gt;</b>the standard, in full</a>
-      <a href="https://clickcoded.com/ai-visibility-check-free/receipts.json"><b>&gt;</b>our own manifest</a>
+      <a href="https://clickcoded.com/ai-visibility-check-free/checkable.json"><b>&gt;</b>our own manifest</a>
       <a href="https://pulse.clickcoded.com/"><b>&gt;</b>monitor it monthly (Pulse)</a>
       <a href="https://clickcoded.com/"><b>&gt;</b>about the studio</a>
     </div>
@@ -70,7 +70,7 @@ pre#preview{background:rgba(4,38,44,.6);border:1px solid var(--border);border-ra
   </a>
 </div>
 <div class="wrap">
-<p class="mark">CLICK CODED · TOOL · RECEIPTS STANDARD v0.2</p>
+<p class="mark">CLICK CODED · TOOL · CHECKABLE STANDARD v0.3</p>
 <h1>Manifest Generator</h1>
 <p class="sub">Fill in your operator details and claims below. The JSON updates as you type. Runs
 entirely in your browser — nothing is uploaded anywhere. Read <a href="/">the standard itself</a>
@@ -91,10 +91,10 @@ first if you haven't.</p>
 <label for="op-principal">Human principal (optional)</label><input type="text" id="op-principal" placeholder="Named human accountable for this operation">
 <label for="op-disclosure">Disclosure line</label><input type="text" id="op-disclosure" placeholder="e.g. AI-operated, human-reviewed, disclosed on every page">
 <p class="hint">say plainly what you are — a manifest that hides the operator type is non-conforming in spirit even if it validates</p>
-<label for="op-coverage">Coverage (v0.2, optional) — comma-separated categories this manifest commits to</label>
+<label for="op-coverage">Coverage (optional) — comma-separated categories this manifest commits to</label>
 <input type="text" id="op-coverage" placeholder="e.g. revenue, delivery, correction">
 <p class="hint">Hole 1 fix: declaring coverage means staying silent on a category you listed here is non-conforming, not just incomplete</p>
-<label for="op-materiality">Materiality rule (v0.2, optional)</label>
+<label for="op-materiality">Materiality rule (optional)</label>
 <input type="text" id="op-materiality" placeholder="What counts as material enough to require a claim">
 </fieldset>
 
@@ -111,25 +111,28 @@ on request.</p>
 <pre id="preview"></pre>
 <p class="status" id="status"></p>
 <div class="actions">
-<button class="btn primary" id="download" type="button">Download receipts.json</button>
+<button class="btn primary" id="download" type="button">Download checkable.json</button>
 <button class="btn" id="copy" type="button">Copy JSON</button>
 </div>
+<p class="hint">Note: this generator doesn't yet have a field for the optional v0.3 <code>claims[].metrics</code>
+object — add it by hand if you want structured figures a validator can diff. Everything else here is current.</p>
 
-<div class="rule"><strong>Where to host it:</strong> your site root (<code>/receipts.json</code>) or
-alongside your disclosure page — either is fine, just link to it from somewhere a human or crawler
-will find it. <strong>Archive tip:</strong> after publishing, save a timestamped copy at
+<div class="rule"><strong>Where to host it:</strong> your site root (<code>/checkable.json</code>, a
+<code>/receipts.json</code> alias works too) or alongside your disclosure page — either is fine,
+just link to it from somewhere a human or crawler will find it. <strong>Archive tip:</strong> after
+publishing, save a timestamped copy at
 <a href="https://web.archive.org/save/" target="_blank" rel="noopener">web.archive.org/save</a> —
 that's an external timestamp you don't control, which is the point.</div>
 
-<div class="cta"><strong>Publish one?</strong> Email <a href="mailto:run@clickcoded.com?subject=Receipts%20Standard">run@clickcoded.com</a>
-("Receipts Standard") — conforming manifests get linked from the standard's page. The v0.2 fields
+<div class="cta"><strong>Publish one?</strong> Email <a href="mailto:run@clickcoded.com?subject=Checkable%20Standard">run@clickcoded.com</a>
+("Checkable Standard") — conforming manifests get linked from the standard's page. The fields
 above (coverage, independence, excerpt, confidence) are all optional — skip them and you still get
 a conforming v0.1-shaped manifest.</div>
 
 <p class="small">Validate what you generate yourself: fetch the manifest, confirm every
 <code>verifiability: "public"</code> claim's evidence URL returns 200, confirm correction chains
 resolve. <a href="/">Full spec</a> ·
-<a href="https://clickcoded.com/ai-visibility-check-free/receipts.json">our own manifest</a>, as a live example.</p>
+<a href="https://clickcoded.com/ai-visibility-check-free/checkable.json">our own manifest</a>, as a live example.</p>
 </div>
 </header>
 
@@ -316,7 +319,7 @@ resolve. <a href="/">Full spec</a> ·
     };
     if (materiality) rules.materiality = materiality;
     var manifest = {
-      spec: "receipts-standard/0.2",
+      spec: "receipts-standard/0.3",
       spec_url: "https://receipts.clickcoded.com/",
       operator: (function(){
         var op = {
@@ -391,7 +394,7 @@ resolve. <a href="/">Full spec</a> ·
     var blob = new Blob([JSON.stringify(manifest, null, 2)], {type:"application/json"});
     var url = URL.createObjectURL(blob);
     var a = document.createElement("a");
-    a.href = url; a.download = "receipts.json";
+    a.href = url; a.download = "checkable.json";
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
     URL.revokeObjectURL(url);
   });

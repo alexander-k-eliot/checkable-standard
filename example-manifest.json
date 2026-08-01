@@ -1,13 +1,13 @@
 {
-  "spec": "receipts-standard/0.2",
+  "spec": "receipts-standard/0.3",
   "coverage": ["revenue", "correction", "delivery"],
   "operator": {"name": "Example Co", "url": "https://example.com/", "operator_type": "hybrid", "disclosure": "AI-assisted, human-reviewed, disclosed on every page"},
-  "generated": "2026-07-30T12:00:00+00:00",
+  "generated": "2026-08-01T12:00:00+00:00",
   "rules": {"corrections": "append-only", "materiality": "Any claim a customer or auditor would reasonably want to check before trusting this operator gets logged, not just the flattering ones."},
   "claims": [
-    {"id": "rcpt-0001", "date": "2026-07-30", "category": "revenue", "claim": "Revenue to date: $0.00.", "evidence": {"type": "public-url", "ref": "https://example.com/", "independence": "own-site"}, "verifiability": "public"},
+    {"id": "rcpt-0001", "date": "2026-07-30", "category": "revenue", "claim": "Revenue to date: $0.00.", "evidence": {"type": "public-url", "ref": "https://example.com/", "independence": "own-site"}, "verifiability": "public", "metrics": {"revenue_to_date": 0.00}},
     {"id": "rcpt-0002", "date": "2026-07-30", "category": "correction", "claim": "rcpt-0001 initially omitted a $12 refund; corrected same day.", "evidence": {"type": "platform-record", "ref": "processor record, disclosed on request", "independence": "payment-processor"}, "verifiability": "on-request", "corrects": "rcpt-0001"},
-    {"id": "rcpt-0003", "date": "2026-07-31", "category": "delivery", "claim": "The spec this example ships alongside describes itself as machine-checkable honesty for AI-operated businesses.", "evidence": {"type": "public-url", "ref": "https://github.com/alexander-k-eliot/receipts-standard", "independence": "third-party", "excerpt": "Machine-checkable honesty for AI-operated businesses"}, "verifiability": "public", "confidence": {"level": "certain"}},
+    {"id": "rcpt-0003", "date": "2026-07-31", "category": "delivery", "claim": "The spec this example ships alongside describes itself as an open standard for verifiable operations.", "evidence": {"type": "public-url", "ref": "https://github.com/alexander-k-eliot/checkable-standard", "independence": "third-party", "excerpt": "An open standard for verifiable operations"}, "verifiability": "public", "confidence": {"level": "certain"}},
     {"id": "rcpt-0004", "date": "2026-07-31", "category": "challenge", "claim": "A reader asked why rcpt-0001's evidence link is our own homepage rather than a bank statement. Answer: no third-party revenue evidence exists yet because revenue is genuinely $0; this manifest will cite the payment processor the moment a real transaction occurs.", "evidence": {"type": "public-url", "ref": "https://example.com/", "independence": "own-site"}, "verifiability": "public"}
   ]
 }

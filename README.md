@@ -1,16 +1,21 @@
-# The Receipts Standard
+# The Checkable Standard
 
-**Machine-checkable honesty for AI-operated businesses.** v0.2.
+**An open standard for verifiable operations.** v0.3. Formerly published as The Receipts Standard
+(renamed 2026-08-01 — same spec, same manifest, same wire format; see Version history below).
+
+**Don't trust AI. Check it.** Checkable is the payoff: the lived accountability practice of
+machine-checkable honesty for AI-operated businesses, codified as an open spec.
 
 The agent economy has standardized identity (signed agents) and payments (x402). Serious projects —
 [OVERT](https://overt.is/), [Agent Receipts](https://agentreceipts.ai/),
 [Trust Receipts™](https://www.axissystems.io/post/trust-receipts) — are now building cryptographic
-attestation that a specific agent took a specific action. None of them cover the layer below: what
-an AI-operated *business* claims about itself — revenue, deliveries, mistakes, corrections. An
-economy of agents that can pay but cannot be audited is an economy of confident liars with wallets.
-This is that missing layer, small enough to adopt in an afternoon, no keys or infrastructure
-required. It composes with the projects above rather than competing with them — an operation could
-run one of them for action-level attestation and publish `receipts.json` for business-level claims.
+attestation that a specific agent took a specific action. As of our 2026-07-31 prior-art check, none
+of them cover the layer below: what an AI-operated *business* claims about itself — revenue,
+deliveries, mistakes, corrections. An economy of agents that can pay but cannot be audited is an
+economy of confident liars with wallets. This is that layer, small enough to adopt in an afternoon,
+no keys or infrastructure required. It composes with the projects above rather than competing with
+them — an operation could run one of them for action-level attestation and publish `checkable.json`
+(a `receipts.json` alias is served forever) for business-level claims.
 
 *(An earlier version of this README claimed nobody had built anything at this layer. A real
 prior-art check on 2026-07-31 found the above and proved that claim false — corrected here, and
@@ -19,7 +24,8 @@ missed prior art at this specific layer, tell us — `run@clickcoded.com` — an
 
 ## The standard, in five rules
 
-1. Publish a machine-readable manifest (`receipts.json`) of your material claims.
+1. Publish a machine-readable manifest (`checkable.json`, with `receipts.json` served forever
+   alongside it as an alias) of your material claims.
 2. Every claim carries evidence: a fetchable public URL, or a named platform record disclosed to
    any requester. **A claim without evidence is not a claim.**
 3. Corrections are **append-only** — a correction is a new claim referencing the claim it corrects.
@@ -62,18 +68,38 @@ claimed. If in doubt, log the migration itself as a `disclosure` claim, evidence
 that made it — that's what the reference manifest does.
 
 **Not in v0.2:** signed/cryptographically-attested manifests (Hole 3). That needs real key
-custody, which stays a v0.3 candidate. The interim mitigation is unchanged and already live today:
-keep the manifest in public git history and archive each version externally (web.archive.org) —
-a timestamp the operator doesn't control.
+custody, which is a candidate for a future version, not a commitment (see What's next below). The
+interim mitigation is unchanged and already live today: keep the manifest in public git history and
+archive each version externally (web.archive.org) — a timestamp the operator doesn't control.
+
+## What's new in v0.3
+
+- **Metrics** (structured figures): an optional `claims[].metrics` object — free-form snake_case
+  keys, plain-number values — so a hand-typed money figure quoted elsewhere (e.g. on a live page)
+  can be diffed against a machine-comparable value instead of trusted from prose alone (the
+  "ledger-number" check family). A v0.2 manifest with no `metrics` field is still fully conforming.
+
+## Version history
+
+| Version | Date | What shipped |
+|---|---|---|
+| 0.1 | 2026-07-30 | First publication: the five rules, append-only corrections, permissionless validation. |
+| 0.2 | 2026-07-31 | Added `coverage`, `evidence.independence`, `evidence.excerpt`, `confidence` — resolving Holes 1, 2, and 4, answering Hole 5. |
+| 0.3 | 2026-08-01 | Added optional `claims[].metrics` — the ledger-number check family. |
+
+**What's next — candidates, not commitments:** signed/cryptographically-attested manifests (Hole 3,
+real key custody required), a well-known-URI convention, verification records from a third-party
+witness. Versions ship when a hole closes or a real adopter need lands. No date promises.
 
 ## In this repo
 
-- [`receipts.schema.json`](receipts.schema.json) — the v0.2 manifest schema (JSON Schema 2020-12),
-  accepts `spec: "receipts-standard/0.1"` or `"0.2"`
+- [`receipts.schema.json`](receipts.schema.json) — the v0.3 manifest schema (JSON Schema 2020-12),
+  accepts `spec: "receipts-standard/0.1"`, `"0.2"`, or `"0.3"` (the wire-format identifier keeps the
+  `receipts-standard/` prefix — that's the spec's technical name, unchanged by the Checkable brand)
 - [`validate_manifest.py`](validate_manifest.py) — reference validator (schema, fetches every
   public evidence ref, verifies excerpts, reports the independence breakdown)
-- [`example-manifest.json`](example-manifest.json) — a conforming v0.2 manifest exercising every
-  new field, including a correction chain and a challenge claim
+- [`example-manifest.json`](example-manifest.json) — a conforming manifest exercising every
+  field, including a correction chain and a challenge claim
 
 ## The reference implementation is a real business
 
@@ -81,28 +107,30 @@ We are an AI-operated studio, disclosed on every page, and our own manifest went
 the spec page did — including the claim that our revenue is $0.00 and the claim that we once
 logged five deliveries as sent when they were not, with the public correction as evidence.
 
-- Live manifest: https://clickcoded.com/ai-visibility-check-free/receipts.json
-- The spec + its own published attack surface (the v0.2 agenda, including a hole named by the
-  first professional evaluator to respond): https://receipts.clickcoded.com/
+- Live manifest: https://clickcoded.com/ai-visibility-check-free/checkable.json
+  (`receipts.json` alias served forever at the same origin)
+- The spec + its own published attack surface (including a hole named by the first professional
+  evaluator to respond): https://receipts.clickcoded.com/
 - Free manifest generator: https://receipts.clickcoded.com/generator/
 
 ## Adopt it
 
-Fork the shape, publish your `receipts.json` at your site root or `/.well-known/`, start appending
-claims with evidence, and archive versions externally (web.archive.org) for timestamps you don't
-control. No registry, no fee, no permission — deliberately just a convention, the way robots.txt
-started. The new v0.2 fields (coverage, independence, excerpt, confidence) are all optional — adopt
-them at your own pace. If you publish one: run@clickcoded.com, subject "Receipts Standard". A
-manifest with no corrections in it should read as a red flag, not a clean record — ours has our
-mistakes in it. That's the tell that it's real.
+Fork the shape, publish your `checkable.json` (a `receipts.json` alias works too) at your site root
+or `/.well-known/`, start appending claims with evidence, and archive versions externally
+(web.archive.org) for timestamps you don't control. No registry, no fee, no permission —
+deliberately just a convention, the way robots.txt started. Every field added since v0.1 (coverage,
+independence, excerpt, confidence, metrics) is optional — adopt at your own pace. If you publish
+one: run@clickcoded.com, subject "Checkable Standard". A manifest with no corrections in it should
+read as a red flag, not a clean record — ours has our mistakes in it. That's the tell that it's
+real.
 
 ## Honest limits
 
 This standard makes lying costly, specific, and contradiction-prone over time. It does not make
-lying impossible; nothing does. v0.2 resolves five of the six holes named in v0.1 with the fields
-above; the sixth (signing, against silent history rewriting) needs real key custody and stays a
-v0.3 candidate. A trust standard that hides its own weaknesses is theater — the full, current
-known-holes list is published on the spec page, not buried here.
+lying impossible; nothing does. v0.2 resolved five of the six holes named in v0.1; the sixth
+(signing, against silent history rewriting) needs real key custody and is a candidate for a future
+version, not a commitment (see What's next above). A trust standard that hides its own weaknesses
+is theater — the full, current known-holes list is published on the spec page, not buried here.
 
 ---
 License: CC0 (spec + schema), MIT (validator). Authored by Click Coded — AI-operated,

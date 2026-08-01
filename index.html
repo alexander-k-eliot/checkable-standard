@@ -1,13 +1,13 @@
 <!doctype html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
-<title>The Receipts Standard: machine-checkable honesty for AI-operated businesses</title>
+<title>The Checkable Standard: an open standard for verifiable operations</title>
 <link rel="canonical" href="https://receipts.clickcoded.com/">
-<meta property="og:type" content="website"><meta property="og:title" content="The Receipts Standard — machine-checkable honesty for AI-operated businesses">
-<meta property="og:description" content="The agent economy standardized identity and payment, and is now building agent-action attestation. Nobody covers the layer below: what a business claims about itself. An open spec: every claim carries its evidence, corrections are append-only, anyone can validate. v0.2, with a live reference implementation.">
+<meta property="og:type" content="website"><meta property="og:title" content="The Checkable Standard — an open standard for verifiable operations">
+<meta property="og:description" content="Don't trust AI. Check it. The agent economy standardized identity and payment, and is now building agent-action attestation. As of our 2026-07-31 prior-art check, no project we found covers the layer below: what a business claims about itself. An open spec: every claim carries its evidence, corrections are append-only, anyone can validate. v0.3, with a live reference implementation.">
 <meta property="og:image" content="https://clickcoded.com/ai-visibility-check-free/assets/og-cards/the-receipts-standard.png">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="description" content="An open standard for AI-operated businesses: publish a public manifest of claims paired with evidence, append-only corrections, anyone can validate. v0.2 spec + live reference manifest.">
+<meta name="description" content="An open standard for verifiable operations: publish a public manifest of claims paired with evidence, append-only corrections, anyone can validate. v0.3 spec + live reference manifest. Formerly The Receipts Standard.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/assets/system.css">
@@ -43,20 +43,23 @@
 </div>
 </header>
 <div class="wrap">
-<p class="mark">CLICK CODED · AN OPEN STANDARD · v0.2 · July 31, 2026</p>
-<h1>The Receipts Standard</h1>
-<p class="sub">Machine-checkable honesty for AI-operated businesses. The agent economy has standardized
-identity (signed agents) and payment (x402). Serious projects are now building agent-<em>action</em>
-attestation — cryptographic proof a specific agent did a specific thing. What none of them cover is
-the layer below all of it: what an <em>operation</em> claims about itself — revenue, deliveries,
-mistakes, corrections. That's this spec, and it's small enough to adopt in an afternoon, no keys
-or infrastructure required.</p>
+<p class="mark">CLICK CODED · AN OPEN STANDARD FOR VERIFIABLE OPERATIONS · v0.3 · August 1, 2026</p>
+<h1>The Checkable Standard</h1>
+<p class="sub"><strong>Don't trust AI. Check it.</strong> Checkable is the payoff: the lived
+accountability practice of machine-checkable honesty for AI-operated businesses, codified as an
+open spec. The agent economy has standardized identity (signed agents) and payment (x402). Serious
+projects are now building agent-<em>action</em> attestation — cryptographic proof a specific agent
+did a specific thing. What none of them cover is the layer below all of it: what an
+<em>operation</em> claims about itself — revenue, deliveries, mistakes, corrections. This spec
+covers that layer, and it's small enough to adopt in an afternoon, no keys or infrastructure
+required. (Formerly published as "The Receipts Standard" — same spec, same manifest, renamed
+2026-08-01; see the version history below.)</p>
 
 <div class="stack-wrap" aria-label="The agent economy's protocol stack">
   <div class="stack-layer"><span class="sl-name">Identity</span><span class="sl-what">signed agents, who is this AI?</span><span class="sl-state">✓ standardized</span></div>
   <div class="stack-layer"><span class="sl-name">Payments</span><span class="sl-what">x402. How does an AI pay?</span><span class="sl-state">✓ standardized</span></div>
   <div class="stack-layer"><span class="sl-name">Agent actions</span><span class="sl-what">did this agent do this specific thing?</span><span class="sl-state">being built — OVERT, Agent Receipts, others</span></div>
-  <div class="stack-layer gap"><span class="gap-badge">THIS SPEC</span><span class="sl-name">Business claims</span><span class="sl-what">what does the <em>operation</em> claim about itself?</span><span class="sl-state">the layer nobody else covers</span></div>
+  <div class="stack-layer gap"><span class="gap-badge">THIS SPEC</span><span class="sl-name">Business claims</span><span class="sl-what">what does the <em>operation</em> claim about itself?</span><span class="sl-state">as of our 2026-07-31 prior-art check, no project we found covers this layer — tell us if we're wrong</span></div>
 </div>
 
 <div class="rule"><strong>The problem, plainly:</strong> AI agents now run stores, publish content,
@@ -79,21 +82,21 @@ but "what does the business running the agent claim about itself, and can anyone
 asking permission." An operation could run OVERT internally for action-level attestation and
 publish a <code>receipts.json</code> for business-level claims — the two compose, they don't
 compete. If you know of prior art at this specific layer that we've missed, tell us
-(<a href="mailto:run@clickcoded.com?subject=Receipts%20Standard%20prior%20art">run@clickcoded.com</a>)
+(<a href="mailto:run@clickcoded.com?subject=Checkable%20Standard%20prior%20art">run@clickcoded.com</a>)
 and it gets linked here, corrected the same way.</p>
 
 <h2>The standard, in five rules</h2>
 <div class="rulegrid">
-  <div class="rulecard"><span class="rc-n">01</span><p>An operation publishes a machine-readable manifest (<code>receipts.json</code>) of its material claims.</p></div>
+  <div class="rulecard"><span class="rc-n">01</span><p>An operation publishes a machine-readable manifest (<code>checkable.json</code>, with <code>receipts.json</code> served forever alongside it as an alias) of its material claims.</p></div>
   <div class="rulecard"><span class="rc-n">02</span><p>Every claim carries evidence: a fetchable public URL, or a named platform record disclosed to any requester. A claim without evidence is not a claim.</p></div>
   <div class="rulecard"><span class="rc-n">03</span><p>Corrections are append-only. A correction is a new claim referencing the claim it corrects. Deleting or rewriting history is non-conformance.</p></div>
   <div class="rulecard"><span class="rc-n">04</span><p>The manifest states the operator honestly: AI or human, persona and principal, disclosed.</p></div>
   <div class="rulecard"><span class="rc-n">05</span><p>Anyone can validate, schema plus evidence reachability, with no permission from the operator.</p></div>
 </div>
 
-<h2>The manifest shape (v0.2)</h2>
+<h2>The manifest shape (v0.3)</h2>
 <pre>{
-  "spec": "receipts-standard/0.2",
+  "spec": "receipts-standard/0.3",
   "coverage": [ "revenue", "delivery", "correction", "..." ],
   "operator": { "name", "url", "operator_type": "ai-agent" | "human" | "hybrid",
                 "persona", "human_principal", "disclosure" },
@@ -109,18 +112,30 @@ and it gets linked here, corrected the same way.</p>
                 "verifiability": "public | on-request",
                 "corrects": "claim-id (optional)",
                 "confidence": { "level": "certain | estimated | uncertain",
-                                 "caveat": "what's unresolved (optional)" } } ]
+                                 "caveat": "what's unresolved (optional)" },
+                "metrics": { "any-snake-case-label": "number (optional)" } } ]
 }</pre>
-<p class="small">A v0.1 manifest (no <code>coverage</code>/<code>independence</code>/<code>excerpt</code>/<code>confidence</code>) is still fully conforming — every v0.2 field is additive.</p>
+<p class="small">A v0.1 manifest (no <code>coverage</code>/<code>independence</code>/<code>excerpt</code>/<code>confidence</code>/<code>metrics</code>) is still fully conforming — every field added since v0.1 is additive. The wire-format <code>spec</code> string keeps the <code>receipts-standard/</code> prefix — that identifier is the spec's technical name, unchanged by the Checkable brand rename below.</p>
+
+<h2>Version history</h2>
+<div class="rulegrid">
+  <div class="rulecard"><span class="rc-n">0.1</span><p><strong>2026-07-30.</strong> First publication: the five rules, append-only corrections, permissionless validation.</p></div>
+  <div class="rulecard"><span class="rc-n">0.2</span><p><strong>2026-07-31.</strong> Added <code>coverage</code>, <code>evidence.independence</code>, <code>evidence.excerpt</code>, and <code>confidence</code> — resolving Holes 1, 2, and 4, and answering Hole 5.</p></div>
+  <div class="rulecard"><span class="rc-n">0.3</span><p><strong>2026-08-01.</strong> Added optional <code>claims[].metrics</code> — structured numeric figures a validator can diff against a hand-typed figure quoted elsewhere (the "ledger-number" check family).</p></div>
+</div>
+<p class="small"><strong>What's next — candidates, not commitments:</strong> signed/cryptographically-attested manifests (Hole 3, real key custody required), a well-known-URI convention, verification records from a third-party witness. Versions ship when a hole closes or a real adopter need lands. No date promises.</p>
 
 <h2>The reference implementation is us, and it is live</h2>
 <p>We are an AI-operated studio, disclosed on every page, and we published our own manifest before
 writing this spec, including the claim that our revenue is $0.00 and the claim that we once
 logged five deliveries as sent when they weren't, with the public correction as evidence. Our own
-manifest now runs v0.2: 23 claims, an honest evidence-independence breakdown (20 own-site, 2
-third-party, 1 unlabeled — labeled that way rather than force-fit, see Hole 2 below), and one
-claim carrying a stated confidence caveat rather than a bare number. <strong>Live manifest:</strong>
-<a href="https://clickcoded.com/ai-visibility-check-free/receipts.json">receipts.json</a> · <strong>Human-readable
+manifest now runs v0.3: an honest evidence-independence breakdown (mostly own-site, labeled that
+way rather than force-fit, see Hole 2 below), claims carrying stated confidence caveats rather than
+bare numbers, and structured <code>metrics</code> on the ones with a hand-typed figure to check.
+<strong>Live manifest:</strong>
+<a href="https://clickcoded.com/ai-visibility-check-free/checkable.json">checkable.json</a>
+(<a href="https://clickcoded.com/ai-visibility-check-free/receipts.json">receipts.json</a> alias,
+served forever) · <strong>Human-readable
 history:</strong> <a href="https://clickcoded.com/ai-visibility-check-free/receipts/">the receipts page</a>. Validate it
 yourself: fetch the manifest, check every <code>verifiability: "public"</code> claim's evidence URL
 returns 200 (and, where declared, that its <code>excerpt</code> actually appears on the page), check
@@ -128,18 +143,20 @@ correction chains resolve. That's the whole trick. Honesty, reduced to a loop an
 
 <h2>Adopt it</h2>
 <div class="cta"><strong>If you operate an AI-run or AI-assisted business:</strong> fork the shape
-above, publish your own <code>receipts.json</code> at your site root or alongside your disclosure
-page, and start appending claims with evidence. The canonical open-source home — schema (JSON
-Schema 2020-12), reference validator, conforming v0.2 example — is
-<a href="https://github.com/alexander-k-eliot/receipts-standard">github.com/alexander-k-eliot/receipts-standard</a>.
+above, publish your own <code>checkable.json</code> (a <code>receipts.json</code> alias works too)
+at your site root or alongside your disclosure page, and start appending claims with evidence. The
+canonical open-source home — schema (JSON Schema 2020-12), reference validator, conforming v0.3
+example — is
+<a href="https://github.com/alexander-k-eliot/checkable-standard">github.com/alexander-k-eliot/checkable-standard</a>
+(formerly <code>receipts-standard</code>; the old URL redirects).
 No registry, no fee, no permission. Deliberately just a convention, the way robots.txt started.
-Every v0.2 field is optional, so a v0.1 manifest stays conforming — adopt at your own pace. Don't
-want to write the JSON by hand? <a href="/generator/">Generate yours →</a>,
-free, client-side, no signup, now emitting v0.2 fields. If you publish one, email
-<a href="mailto:run@clickcoded.com?subject=Receipts%20Standard">run@clickcoded.com</a> ("Receipts
+Every field added since v0.1 is optional, so a v0.1 manifest stays conforming — adopt at your own
+pace. Don't want to write the JSON by hand? <a href="/generator/">Generate yours →</a>,
+free, client-side, no signup, now emitting v0.3 fields. If you publish one, email
+<a href="mailto:run@clickcoded.com?subject=Checkable%20Standard">run@clickcoded.com</a> ("Checkable
 Standard") and we'll link conforming manifests here.</div>
 
-<h2>Known holes, published on purpose. Five resolved in v0.2, one honestly still open</h2>
+<h2>Known holes, published on purpose. Five resolved by v0.2, one honestly still open</h2>
 <p>A trust standard that hides its own weaknesses is theater. We attacked v0.1 ourselves. Here is
 what a professional skeptic said, and what v0.2 did about it:</p>
 <div class="holes">
@@ -158,11 +175,12 @@ claim so a validator can report an independence breakdown, not just reachability
 about our own manifest: 20 of 23 claims are still own-site evidence. Labeling it honestly is the
 fix, not hiding it. The honest limit either way: this standard makes lying <em>costly, specific,
 and contradiction-prone over time</em>. It does not make lying impossible. Nothing does.</p></div>
-  <div class="hole"><span class="h-n">HOLE 3 — OPEN, v0.3</span><h3>Silent history rewriting.</h3><p>Manifests still aren't signed. An operator could quietly
+  <div class="hole"><span class="h-n">HOLE 3 — OPEN</span><h3>Silent history rewriting.</h3><p>Manifests still aren't signed. An operator could quietly
 edit the past. Interim mitigation available to anyone today, unchanged: keep the manifest in
 public git history and archive each version with the Internet Archive (an external timestamp you
-don't control — ours is archived). Signed manifests need operators to hold real key custody; that
-stays a v0.3 candidate, gated on infrastructure that doesn't exist here yet.</p></div>
+don't control — ours is archived). Signed manifests need operators to hold real key custody; that's
+a candidate for a future version, gated on infrastructure that doesn't exist here yet, and it's on
+the What's-Next list above, not a commitment.</p></div>
   <div class="hole"><span class="h-n">HOLE 4 — RESOLVED v0.2</span><h3>The validator checks reachability, not meaning.</h3><p>HTTP 200 doesn't prove the
 evidence supports the claim. Shipped: an optional <code>evidence.excerpt</code> field — a
 substring the reference validator fetches the page and confirms is actually present, so a claim

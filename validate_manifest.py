@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""validate_manifest.py — Receipts Standard v0.1/v0.2/v0.3 validator. Usage: validate_manifest.py <url-or-path>.
+"""validate_manifest.py — Checkable Standard v0.1/v0.2/v0.3 validator (wire-format spec identifier stays 'receipts-standard/0.x'). Usage: validate_manifest.py <url-or-path>.
 Checks structural conformance (required fields, category/evidence-type enums, declared coverage
 actually has claims), fetches every public evidence ref (HTTP 200 = pass), and — v0.2 — verifies
 evidence.excerpt substrings and reports an evidence-independence breakdown. v0.3 validates the
