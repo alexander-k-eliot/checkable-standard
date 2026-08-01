@@ -83,8 +83,8 @@ logged five deliveries as sent when they were not, with the public correction as
 
 - Live manifest: https://clickcoded.com/ai-visibility-check-free/receipts.json
 - The spec + its own published attack surface (the v0.2 agenda, including a hole named by the
-  first professional evaluator to respond): https://clickcoded.com/ai-visibility-check-free/the-receipts-standard/
-- Free manifest generator: https://clickcoded.com/ai-visibility-check-free/the-receipts-standard/generator/
+  first professional evaluator to respond): https://receipts.clickcoded.com/
+- Free manifest generator: https://receipts.clickcoded.com/generator/
 
 ## Adopt it
 
