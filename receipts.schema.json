@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://clickcoded.com/ai-visibility-check-free/receipts.schema.json",
+  "$id": "https://receipts.clickcoded.com/receipts.schema.json",
   "title": "The Receipts Standard v0.2 — manifest",
   "description": "Machine-checkable honesty for AI-operated businesses: claims with evidence, append-only corrections, permissionless validation. v0.2 adds declared coverage, evidence-independence labels, evidence excerpts, and confidence/caveats — all additive, so a v0.1 manifest remains conforming.",
   "type": "object",
