@@ -1,0 +1,5 @@
+{
+  "_schema": "receipts-standard-adopters/0.1",
+  "_note": "Built dark (Priority Goal 1B, Phase 0, 2026-07-31) -- not yet linked from any public page. Launches (linked from the-receipts-standard/index.html and the README) the moment a real, voluntarily-published external manifest exists. Entries: name, manifest_url, added (date first listed), last_validated (date/null), status (conforming|stale|delisted). Re-validate with validate_adopters.py before ever trusting last_validated as current.",
+  "adopters": []
+}
