@@ -1,0 +1,96 @@
+{
+  "spec": "receipts-standard/0.3",
+  "spec_url": "https://checkable.clickcoded.com/",
+  "coverage": [
+    "revenue",
+    "delivery",
+    "infrastructure",
+    "challenge"
+  ],
+  "operator": {
+    "name": "Photo AI",
+    "url": "https://photoai.com/",
+    "operator_type": "human",
+    "human_principal": "Pieter Levels (@levelsio)",
+    "disclosure": "DRAFT, NOT PUBLISHED BY THE OPERATOR. This file was drafted by Click Coded on 2026-08-02 from Pieter Levels' own public statements, as an offer, not as a claim that he has adopted it. Nobody at Photo AI has reviewed, approved, or published it. Every claim is quoted from a surface he controls and carries an archived source URL. Verify before publishing."
+  },
+  "generated": "2026-08-02T08:15:00+00:00",
+  "rules": {
+    "corrections": "append-only; a correction is a new claim referencing the claim it corrects via 'corrects'",
+    "materiality": "any claim about Photo AI's revenue, scale, or delivery that a customer or journalist would reasonably want to check before trusting it",
+    "verifiability": "public = evidence.ref is independently fetchable",
+    "provenance": "drafted by a third party from the operator's own published statements; the operator has adopted nothing here"
+  },
+  "claims": [
+    {
+      "id": "pai-0001",
+      "date": "2026-03-06",
+      "category": "revenue",
+      "claim": "Photo AI makes 105,000/mo in revenue and 80,000/mo in profit, as stated by its founder on 6 March 2026.",
+      "evidence": {
+        "type": "public-url",
+        "ref": "https://web.archive.org/web/20260802080205/https://levels.io/photoai-40870-line-index-php-105k-mo-revenue",
+        "independence": "own-site",
+        "excerpt": "105,000/mo revenue and 80,000/mo profit"
+      },
+      "verifiability": "public",
+      "confidence": {
+        "level": "certain",
+        "caveat": "Quoted verbatim from the founder's own post title, which states the figures without a currency symbol. Read as USD. The figure is dated 2026-03-06 and is not a current-month number."
+      },
+      "metrics": {
+        "monthly_revenue_usd": 105000,
+        "monthly_profit_usd": 80000
+      }
+    },
+    {
+      "id": "pai-0002",
+      "date": "2026-03-06",
+      "category": "infrastructure",
+      "claim": "Photo AI runs on a single index.php file of 40,870 lines.",
+      "evidence": {
+        "type": "public-url",
+        "ref": "https://web.archive.org/web/20260802080205/https://levels.io/photoai-40870-line-index-php-105k-mo-revenue",
+        "independence": "own-site",
+        "excerpt": "40,870 line index.php"
+      },
+      "verifiability": "public",
+      "metrics": {
+        "index_php_lines": 40870
+      }
+    },
+    {
+      "id": "pai-0003",
+      "date": "2026-08-01",
+      "category": "delivery",
+      "claim": "Photo AI had generated 30,398,385 photos as of 2026-08-01, per the counter served on its own homepage.",
+      "evidence": {
+        "type": "public-url",
+        "ref": "https://web.archive.org/web/20260801225252/https://photoai.com/",
+        "independence": "own-site",
+        "excerpt": "30,398,385 photos generated"
+      },
+      "verifiability": "public",
+      "confidence": {
+        "level": "certain",
+        "caveat": "The counter is live and increments continuously. It read 30,407,342 on 2026-08-02. Evidence points at a dated snapshot for that reason. Repoint at photoai.com and refresh the figure if you publish this."
+      },
+      "metrics": {
+        "photos_generated": 30398385
+      }
+    },
+    {
+      "id": "pai-0004",
+      "date": "2026-08-01",
+      "category": "challenge",
+      "claim": "The Checkable Index listed photoai.com as INSUFFICIENT PUBLIC CLAIMS on 2026-08-01: fewer than three material self-claims render on the product surface, and no own-revenue figure appears there at all. The answer is that the revenue figures exist and are public, they are published on levels.io rather than on photoai.com. This file puts them at the product domain in a form a machine can read.",
+      "evidence": {
+        "type": "public-url",
+        "ref": "https://checkable.clickcoded.com/the-index/#row-photoai",
+        "independence": "third-party",
+        "excerpt": "INSUFFICIENT PUBLIC CLAIMS"
+      },
+      "verifiability": "public"
+    }
+  ]
+}
