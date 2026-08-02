@@ -199,29 +199,31 @@ renderStaticRubric();
 // match a later state would be fabricating a result, which is the exact failure this tool exists
 // to surface.
 // A real, dated capture -- not a fabricated example. Run locally against the live engine
-// (src/claims.ts) targeting checkable.clickcoded.com/audit/ on 2026-08-02, re-run same day after
-// the hub-origin manifest cache lag (session-log 2026-08-02, "GitHub Pages edge-cache lag") cleared
-// and the audit page's manifest link was repointed at the canonical clickcoded.com/checkable.json
-// (commit c294104) -- both changes are why this capture's score differs from the wedge build's
-// original one. Every quote below is verbatim from that page at that time; re-run the live button
-// any time to see today's version.
+// (src/claims.ts) targeting checkable.clickcoded.com/audit/ on 2026-08-02, re-run same day after:
+// (1) the hub-origin manifest cache lag (session-log 2026-08-02, "GitHub Pages edge-cache lag")
+// cleared, (2) the audit page's manifest link was repointed at the canonical
+// clickcoded.com/checkable.json (commit c294104), and (3) the two price-claim paragraphs were
+// wired to the real $99 Gumroad listing that was already on the page as an uncredited sibling
+// link (commit cb106ca -- a real evidence fix, not rubric gaming; verified with a full local run
+// including live evidence-link and manifest fetches, not just block extraction). Every quote below
+// is verbatim from that page at that time; re-run the live button any time to see today's version.
 const DEMO_RESULT = {
   target: 'https://checkable.clickcoded.com/audit/',
-  fetchedAt: '2026-08-02T06:03:07.359Z',
+  fetchedAt: '2026-08-02T06:08:17.861Z',
   page: {ok:true, status:200},
   claims: [
-    {quote:'The first three buyers get the $99 price, and in exchange:', section:'The founding three', kinds:['money'], evidence:'none'},
-    {quote:'$99 for the first three businesses, then $149.', section:'Become checkable', kinds:['money'], evidence:'none'},
+    {quote:'The first three buyers get the $99 price, and in exchange:', section:'The founding three', kinds:['money'], evidence:'external', evidenceUrl:'https://clickcoded.gumroad.com/l/checkable-audit', evidenceStatus:'ok'},
+    {quote:'$99 for the first three businesses, then $149.', section:'Become checkable', kinds:['money'], evidence:'external', evidenceUrl:'https://clickcoded.gumroad.com/l/checkable-audit', evidenceStatus:'ok'},
     {quote:'Our own manifest is checkable.json, our revenue is published in it, and it currently reads $0.00.', section:'Become checkable', kinds:['money'], evidence:'external', evidenceUrl:'https://clickcoded.com/checkable.json', evidenceStatus:'ok'},
   ],
-  counts: {blocksScanned:33, sentencesScanned:102, claimShaped:3, reported:3, withEvidence:1, evidenceExternal:1, evidenceFetched:1, evidenceOk:1, evidenceBroken:0},
+  counts: {blocksScanned:33, sentencesScanned:102, claimShaped:3, reported:3, withEvidence:3, evidenceExternal:3, evidenceFetched:3, evidenceOk:3, evidenceBroken:0},
   truncated: false,
   manifest: {present:true, shapeConforming:true, claimCount:32, url:'https://checkable.clickcoded.com/checkable.json'},
-  score: {earned:8, outOf:10, rubric:[
+  score: {earned:10, outOf:10, rubric:[
     {id:'manifest-present', label:'A claims manifest (checkable.json or receipts.json) is published', points:3, earned:3},
     {id:'manifest-shape', label:'The manifest has the required fields and spec marker (shape check, not the full validator)', points:1, earned:1},
     {id:'any-evidence', label:'At least one detected claim sits in a content block that links to something', points:1, earned:1},
-    {id:'half-evidence', label:'At least half of detected claims sit in blocks that link to something', points:2, earned:0},
+    {id:'half-evidence', label:'At least half of detected claims sit in blocks that link to something', points:2, earned:2},
     {id:'links-resolve', label:'Every evidence link we fetched actually loaded', points:2, earned:2},
     {id:'external-evidence', label:'At least one evidence link points somewhere other than the site itself', points:1, earned:1},
   ]},
