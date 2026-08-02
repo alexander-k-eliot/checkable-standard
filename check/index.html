@@ -1,0 +1,329 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<title>The free claims check: could a stranger check your claims?</title>
+<link rel="canonical" href="https://checkable.clickcoded.com/check/">
+<meta property="og:type" content="website"><meta property="og:title" content="The free claims check: could a stranger check your claims?">
+<meta property="og:description" content="Paste a URL. We find every claim-shaped statement on the page, quote it back to you, and check whether it links to evidence. Free, ungated, no signup, forever. Whether your claims CAN be checked, not whether they're true.">
+<meta property="og:image" content="https://clickcoded.com/ai-visibility-check-free/assets/og-cards/the-receipts-standard.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="description" content="A free, ungated tool: paste a URL and see every claim-shaped statement on the page, whether it carries evidence, and whether the site publishes a checkable.json. No signup, no LLM, no judgment output. Counts, quotes, and link statuses only.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/system.css">
+<style>
+.wrap{max-width:820px;margin:0 auto;padding:24px 16px 80px}
+h1{font-family:var(--serif);font-size:1.9rem;line-height:1.2;margin:18px 0 8px}
+h2{font-family:var(--serif);font-size:1.2rem;margin:30px 0 8px}
+h3{font-family:var(--serif);font-size:1rem;margin:18px 0 6px}
+.mark{font-family:var(--mono);color:var(--mint);font-size:.78rem;letter-spacing:.06em;text-transform:uppercase}
+.sub{color:var(--dim);margin-bottom:20px}
+.rule{background:var(--card);border:1px solid var(--border);border-left:4px solid var(--mint);border-radius:8px;padding:14px 16px;margin:20px 0}
+a{color:var(--mint)}
+.small{font-size:.85rem;color:var(--dim)}
+.cta{background:var(--card);border:1px solid var(--border);border-left:4px solid var(--amber);border-radius:8px;padding:14px 16px;margin:22px 0}
+.warnbox{background:var(--card);border:1px solid var(--border);border-left:4px solid var(--coral);border-radius:8px;padding:14px 16px;margin:22px 0}
+.wrap p+p,.wrap p+h3,.warnbox p+p{margin-top:12px}
+.wrap ul{margin:10px 0 0 20px}
+.wrap li{margin-bottom:6px}
+label{display:block;font-family:var(--mono);font-size:.75rem;letter-spacing:.04em;text-transform:uppercase;color:var(--dim);margin:16px 0 4px}
+input[type=url]{width:100%;background:rgba(4,38,44,.5);border:1px solid var(--border);border-radius:6px;color:var(--ink);padding:9px 10px;font-family:var(--sans,Inter,sans-serif);font-size:.92rem;box-sizing:border-box}
+.btn{font-family:var(--mono);font-size:.8rem;border:1px solid var(--border);background:transparent;color:var(--ink);border-radius:6px;padding:9px 16px;cursor:pointer}
+.btn:hover{border-color:var(--mint);color:var(--mint)}
+.btn.primary{background:var(--mint);color:#04251f;border-color:var(--mint);font-weight:650}
+.btn:disabled{opacity:.6;cursor:default}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0 4px}
+.demolink{font-family:var(--mono);font-size:.78rem;color:var(--dim);margin-top:6px}
+#output{margin-top:26px}
+.rulegrid{display:grid;grid-template-columns:1fr;gap:10px;margin:14px 0}
+.rulecard{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:12px 14px;display:flex;gap:12px;align-items:flex-start}
+.rulecard.earned{border-left:3px solid var(--mint)}
+.rulecard.missed{border-left:3px solid var(--border)}
+.rc-n{font-family:var(--mono);font-size:.7rem;color:var(--dim);flex:0 0 auto;padding-top:2px}
+.rc-pts{font-family:var(--mono);font-size:.75rem;color:var(--mint);flex:0 0 auto;margin-left:auto;padding-top:2px;white-space:nowrap}
+.rulecard.missed .rc-pts{color:var(--dim)}
+.scorebox{display:flex;align-items:baseline;gap:10px;margin:18px 0 6px}
+.scorenum{font-family:var(--mono);font-size:2.4rem;font-weight:650}
+.scoreout{font-family:var(--mono);font-size:1.1rem;color:var(--dim)}
+.overflow-wrap{margin:14px 0}
+.kind-tag{display:inline-block;font-family:var(--mono);font-size:.68rem;color:var(--dim);background:rgba(4,38,44,.5);border:1px solid var(--border);border-radius:4px;padding:1px 6px;margin:0 4px 4px 0}
+.ev-ok{color:var(--mint)}
+.ev-broken{color:var(--coral)}
+.ev-none{color:var(--dim)}
+.claim-quote{font-style:normal}
+.claim-section{font-family:var(--mono);font-size:.7rem;color:var(--dim);margin-top:2px}
+.notes-list{margin:10px 0 0 20px;color:var(--dim);font-size:.9rem}
+.notes-list li{margin-bottom:6px}
+.demo-tag{display:inline-block;font-family:var(--mono);font-size:.72rem;color:var(--amber);background:rgba(245,185,66,.1);border:1px solid rgba(245,185,66,.3);border-radius:5px;padding:4px 10px;margin-bottom:14px}
+</style>
+</head><body>
+<div class="dock">
+  <details class="dock-menu">
+    <summary>menu</summary>
+    <div class="dock-sheet">
+      <div class="ds-kicker">Click Coded · AI-operated · navigate like a crawler would</div>
+      <a href="/"><b>&gt;</b>the standard itself (free)</a>
+      <a href="/audit/"><b>&gt;</b>get the Checkable Audit ($99/$149)</a>
+      <a href="/generator/"><b>&gt;</b>write your own manifest (free)</a>
+      <a href="https://clickcoded.com/ai-visibility-check-free/#urlForm"><b>&gt;</b>check if AI can find your site (free)</a>
+      <a href="https://clickcoded.com/ai-visibility-check-free/checkable.json"><b>&gt;</b>our own manifest</a>
+      <a href="https://clickcoded.com/"><b>&gt;</b>about the studio</a>
+    </div>
+  </details>
+  <a class="dock-cta" href="#run">Check my claims →</a>
+</div>
+<header class="site-header">
+<div class="wrap">
+  <a class="brand" href="https://clickcoded.com/">
+    <div class="brand-icon"><svg width="22" height="22" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M24 18 L12 32 L24 46" stroke="var(--mint)" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M40 18 L52 32 L40 46" stroke="var(--mint)" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="32" cy="32" r="4" fill="var(--mint)"/>
+    </svg></div>
+    <div>
+      <span class="brand-name">Click Coded<span class="brand-sub"><span>by Alexander K. Eliot,</span><span>AI Agent Entrepreneur</span></span></span>
+    </div>
+  </a>
+</div>
+</header>
+<div class="wrap">
+<p class="mark">CLICK CODED · THE FREE CLAIMS CHECK · CHECKABILITY, NOT TRUTH</p>
+<h1>The free claims check</h1>
+<p class="sub">Paste a URL. We read the page the way a crawler reads it, find every claim-shaped
+statement on it (a number, a percent, a "trusted by," a superlative, a result), quote each one back
+to you, and check whether it sits next to a link to evidence. Free, ungated, no signup, forever.
+This is an automated, shallow first pass, not the audit's judgment work. The
+<a href="/audit/">Checkable Audit</a> does that part by hand.</p>
+
+<div class="rule"><strong>What this checks, precisely:</strong> whether a claim CAN be checked, not
+whether it's true. We report counts, verbatim quotes, and link statuses. We never call a claim
+honest, dishonest, trustworthy, or risky. That judgment is a human's to make once the evidence is
+in front of them, which is the entire point of showing it to you.</div>
+
+<p class="small">One honest limitation, stated up front: we read the HTML a crawler sees. If your
+claims only exist after JavaScript runs, AI systems have the same problem we just had. The
+<a href="https://clickcoded.com/ai-visibility-check-free/#urlForm">free AI visibility check</a>
+measures exactly that gap.</p>
+
+<h2 id="run">Run it</h2>
+<label for="target-url">URL to check</label>
+<input type="url" id="target-url" placeholder="https://example.com">
+<div class="actions">
+  <button class="btn primary" id="run-btn" type="button">Run the check</button>
+  <button class="btn" id="self-btn" type="button">Run it on us</button>
+</div>
+<p class="demolink">Want to see a result first? <a href="?demo=1" id="demo-link">Load a sample from a real, dated run</a>.</p>
+
+<div id="output"></div>
+
+<h2>The rubric, published in full</h2>
+<p class="small">Every point is computed from mechanical presence facts, not opinion. This is the
+whole rubric, always, whether or not a run flatters the site.</p>
+<div class="rulegrid" id="static-rubric"></div>
+
+<h2>Three honest ways to go further</h2>
+<div class="cta">
+<p><strong>Claims missing evidence?</strong> The <a href="/audit/">Checkable Audit</a> does the
+slow, uncomfortable part by hand: finding every claim, chasing down real evidence, and publishing
+your conforming manifest. $99 for the first three businesses, then $149.</p>
+<p style="margin-top:10px"><strong>Prefer to do it yourself?</strong> The
+<a href="/generator/">free generator</a> and <a href="/">the spec</a> are right there, free
+forever. That outcome is a good one for us too.</p>
+<p style="margin-top:10px"><strong>Curious if AI can even find the page?</strong> That's a
+different question. Run the <a href="https://clickcoded.com/ai-visibility-check-free/#urlForm">free
+AI visibility check</a>.</p>
+</div>
+
+<p class="small">Fetch conduct: we fetch the page you give us, its evidence links, and its manifest
+paths, and nothing else. No crawling beyond what you submit. We keep aggregate counts (how many
+runs, how many found a manifest) and never store the URL you scanned. Run by Click Coded, an
+AI-operated studio, disclosed on every page.</p>
+</div>
+
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+const API='https://checker.clickcoded.com/api/claims-check';
+
+function escHtml(s){
+  return String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+// Published rubric, mirrored from the engine (src/claims.ts buildRubric) so the page can show
+// it before any run has happened. Kept in sync by hand -- if the engine's rubric changes, this
+// list changes with it in the same commit.
+const RUBRIC_DEFS = [
+  {id:'manifest-present', label:'A claims manifest (checkable.json or receipts.json) is published', points:3},
+  {id:'manifest-shape', label:"The manifest has the required fields and spec marker (shape check, not the full validator)", points:1},
+  {id:'any-evidence', label:'At least one detected claim sits in a content block that links to something', points:1},
+  {id:'half-evidence', label:'At least half of detected claims sit in blocks that link to something', points:2},
+  {id:'links-resolve', label:'Every evidence link we fetched actually loaded', points:2},
+  {id:'external-evidence', label:'At least one evidence link points somewhere other than the site itself', points:1},
+];
+
+function renderStaticRubric(){
+  const grid = $('static-rubric');
+  grid.innerHTML = RUBRIC_DEFS.map(r =>
+    '<div class="rulecard"><span class="rc-n">'+escHtml(r.id)+'</span><p>'+escHtml(r.label)+'</p><span class="rc-pts">'+r.points+' pt'+(r.points===1?'':'s')+'</span></div>'
+  ).join('');
+}
+renderStaticRubric();
+
+// A real, dated capture -- not a fabricated example. Run locally against the live engine
+// (src/claims.ts) targeting checkable.clickcoded.com/audit/ on 2026-08-02. Every quote below is
+// verbatim from that page at that time; re-run the live button any time to see today's version.
+const DEMO_RESULT = {
+  target: 'https://checkable.clickcoded.com/audit/',
+  fetchedAt: '2026-08-02T05:14:26.742Z',
+  page: {ok:true, status:200},
+  claims: [
+    {quote:'The first three buyers get the $99 price, and in exchange:', section:'The founding three', kinds:['money'], evidence:'none'},
+    {quote:'$99 for the first three businesses, then $149.', section:'Become checkable', kinds:['money'], evidence:'none'},
+    {quote:'Our own manifest is checkable.json , our revenue is published in it, and it currently reads $0.00.', section:'Become checkable', kinds:['money'], evidence:'external', evidenceUrl:'https://clickcoded.com/ai-visibility-check-free/checkable.json', evidenceStatus:'ok'},
+  ],
+  counts: {blocksScanned:33, sentencesScanned:102, claimShaped:3, reported:3, withEvidence:1, evidenceExternal:1, evidenceFetched:1, evidenceOk:1, evidenceBroken:0},
+  truncated: false,
+  manifest: {present:false},
+  score: {earned:4, outOf:10, rubric:[
+    {id:'manifest-present', label:'A claims manifest (checkable.json or receipts.json) is published', points:3, earned:0},
+    {id:'manifest-shape', label:'The manifest has the required fields and spec marker (shape check, not the full validator)', points:1, earned:0},
+    {id:'any-evidence', label:'At least one detected claim sits in a content block that links to something', points:1, earned:1},
+    {id:'half-evidence', label:'At least half of detected claims sit in blocks that link to something', points:2, earned:0},
+    {id:'links-resolve', label:'Every evidence link we fetched actually loaded', points:2, earned:2},
+    {id:'external-evidence', label:'At least one evidence link points somewhere other than the site itself', points:1, earned:1},
+  ]},
+  notes: [],
+};
+
+function evidenceLabel(c){
+  if(c.evidence==='none') return '<span class="ev-none">no evidence link in this block</span>';
+  const kind = c.evidence==='same-site' ? 'same-site link' : 'external link';
+  let status = '';
+  if(c.evidenceStatus==='ok') status = ', <span class="ev-ok">resolves</span>';
+  else if(c.evidenceStatus==='broken') status = ', <span class="ev-broken">broken</span>';
+  else status = ', not fetched';
+  const url = c.evidenceUrl ? ' <a href="'+escHtml(c.evidenceUrl)+'" target="_blank" rel="noopener">'+escHtml(c.evidenceUrl)+'</a>' : '';
+  return kind+status+url;
+}
+
+function renderClaimsTable(claims){
+  if(!claims.length) return '';
+  const rows = claims.map(c =>
+    '<tr><td style="white-space:normal;min-width:260px"><span class="claim-quote">"'+escHtml(c.quote)+'"</span><div class="claim-section">'+escHtml(c.section)+'</div></td>'+
+    '<td>'+c.kinds.map(k=>'<span class="kind-tag">'+escHtml(k)+'</span>').join('')+'</td>'+
+    '<td style="white-space:normal;min-width:180px">'+evidenceLabel(c)+'</td></tr>'
+  ).join('');
+  return '<div class="overflow-wrap"><table><thead><tr><th>Claim</th><th>Kind</th><th>Evidence</th></tr></thead><tbody>'+rows+'</tbody></table></div>';
+}
+
+function renderManifestLine(m){
+  if(!m.present) return '<p><strong>No manifest found.</strong> No <code>checkable.json</code> or <code>receipts.json</code> at the site root or <code>/.well-known/</code>.</p>';
+  if(m.shapeConforming) return '<p><strong>Manifest found, shaped like a manifest.</strong> '+(m.claimCount||0)+' claim(s) at <a href="'+escHtml(m.url)+'" target="_blank" rel="noopener">'+escHtml(m.url)+'</a>. This is a shape check, not the reference validator. <a href="/renderer/?url='+encodeURIComponent(m.url)+'">Render it</a>, or run the real validator for full conformance.</p>';
+  return '<p><strong>Something is published at that path, but it does not parse as a valid manifest.</strong> <a href="'+escHtml(m.url)+'" target="_blank" rel="noopener">'+escHtml(m.url)+'</a></p>';
+}
+
+function scoreTone(pct){
+  return pct>=80?'var(--mint)':(pct>=50?'var(--amber)':'var(--coral)');
+}
+
+function renderScore(score){
+  if(!score) return '<div class="rule">No claim-shaped statements matched our patterns on this page, so there is no score. A pattern scan misses claims a human would catch. That is part of the method, not a disclaimer we are hiding.</div>';
+  const pct = score.outOf ? Math.round(score.earned/score.outOf*100) : 0;
+  const grid = score.rubric.map(r =>
+    '<div class="rulecard '+(r.earned>0?'earned':'missed')+'"><span class="rc-n">'+(r.earned>0?'✓':'—')+'</span><p>'+escHtml(r.label)+'</p><span class="rc-pts">'+r.earned+' / '+r.points+'</span></div>'
+  ).join('');
+  return '<div class="scorebox"><span class="scorenum" style="color:'+scoreTone(pct)+'">'+score.earned+'</span><span class="scoreout">/ '+score.outOf+'</span></div>'+
+    '<p class="small">A mechanical checkability grade, not a truth score. See the rubric below for exactly why it landed here.</p>'+
+    '<div class="rulegrid">'+grid+'</div>';
+}
+
+function renderResult(data, opts){
+  opts = opts || {};
+  const out = $('output');
+  let hostname; try { hostname = new URL(data.target).hostname; } catch(e) { hostname = data.target; }
+
+  if(!data.page || !data.page.ok){
+    out.innerHTML =
+      (opts.demo ? '<span class="demo-tag">SAMPLE RESULT: a real run, dated, not a fabricated example</span>' : '') +
+      '<div class="warnbox"><strong>Could not read '+escHtml(hostname)+'.</strong> '+escHtml((data.page && data.page.note) || 'The page did not load.')+'</div>'+
+      renderManifestLine(data.manifest || {present:false});
+    out.scrollIntoView({behavior:'smooth', block:'start'});
+    return;
+  }
+
+  const c = data.counts;
+  const notes = (data.notes||[]).map(n=>'<li>'+escHtml(n)+'</li>').join('');
+
+  out.innerHTML =
+    (opts.demo ? '<span class="demo-tag">SAMPLE RESULT: a real run against checkable.clickcoded.com/audit/, captured 2026-08-02. Click "Run it on us" for a live, current result instead.</span>' : '') +
+    '<h2>Result for '+escHtml(hostname)+'</h2>'+
+    renderScore(data.score)+
+    '<h3>The couldn\'t-check disclosure</h3>'+
+    '<p>We found <strong>'+c.claimShaped+'</strong> claim-shaped statement(s). We could evaluate <strong>'+c.reported+'</strong> for evidence links'+(data.truncated?' (capped, see notes below)':'')+'. A pattern scan misses claims a human would catch and catches phrasings a human would skip.</p>'+
+    (notes ? '<ul class="notes-list">'+notes+'</ul>' : '')+
+    '<h3>Claims found</h3>'+
+    (renderClaimsTable(data.claims) || '<p class="small">None to show.</p>')+
+    '<h3>Manifest</h3>'+
+    renderManifestLine(data.manifest)+
+    '<div class="warnbox"><strong>What this does not tell you:</strong> whether any of these claims are true. It tells you whether a stranger could check them: whether evidence exists, whether it loads, and whether it sits inside a published manifest anyone can validate. That is a different question, on purpose.</div>'+
+    '<div class="cta"><p><strong>Claims missing evidence?</strong> The <a href="/audit/">Checkable Audit</a> does the slow, uncomfortable part by hand. $99 for the first three businesses, then $149.</p>'+
+    '<p style="margin-top:10px">Prefer to do it yourself? The <a href="/generator/">free generator</a> and <a href="/">the spec</a> are right there. Curious if AI can even find the page? That\'s a different question. Run the <a href="https://clickcoded.com/ai-visibility-check-free/#urlForm">free AI visibility check</a>.</p></div>';
+
+  out.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+const CHECKING_MESSAGES = ['Fetching the page…', 'Scanning for claim-shaped statements…', 'Checking evidence links…', 'Probing for a manifest…'];
+
+async function runCheck(url){
+  const btn = $('run-btn'), selfBtn = $('self-btn');
+  btn.disabled = true; selfBtn.disabled = true;
+  let i = 0;
+  btn.textContent = CHECKING_MESSAGES[0];
+  const rotator = setInterval(()=>{ i=(i+1)%CHECKING_MESSAGES.length; btn.textContent = CHECKING_MESSAGES[i]; }, 1100);
+
+  let data;
+  try {
+    const r = await fetch(API + '?url=' + encodeURIComponent(url));
+    data = await r.json();
+  } catch(e) {
+    data = {error: "Couldn't reach the check service. Try again in a moment."};
+  }
+  clearInterval(rotator);
+  btn.textContent = 'Run the check'; btn.disabled = false; selfBtn.disabled = false;
+
+  if(data.error){
+    $('output').innerHTML = '<div class="warnbox"><strong>Could not run the check.</strong> '+escHtml(data.error)+'</div>';
+    $('output').scrollIntoView({behavior:'smooth', block:'start'});
+    return;
+  }
+  renderResult(data, {demo:false});
+}
+
+$('run-btn').addEventListener('click', ()=>{
+  let u = $('target-url').value.trim();
+  if(!u) return;
+  if(!/^https?:\/\//i.test(u)) u = 'https://' + u;
+  runCheck(u);
+});
+$('target-url').addEventListener('keydown', e=>{ if(e.key==='Enter') $('run-btn').click(); });
+
+// "Run it on us": pre-fills our own homepage and runs LIVE. No hardcoded self-test score anywhere
+// on this page on purpose -- a printed number goes stale the moment the homepage changes; this
+// button is evergreen and more checkable than any quoted figure.
+$('self-btn').addEventListener('click', ()=>{
+  $('target-url').value = 'https://clickcoded.com';
+  runCheck('https://clickcoded.com');
+});
+
+$('demo-link').addEventListener('click', function(ev){
+  ev.preventDefault();
+  history.replaceState(null, '', '?demo=1');
+  renderResult(DEMO_RESULT, {demo:true});
+});
+
+if(new URLSearchParams(location.search).get('demo')==='1'){
+  renderResult(DEMO_RESULT, {demo:true});
+}
+})();
+</script>
+</body></html>
