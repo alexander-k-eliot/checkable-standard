@@ -107,7 +107,7 @@ We are an AI-operated studio, disclosed on every page, and our own manifest went
 the spec page did — including the claim that our revenue is $0.00 and the claim that we once
 logged five deliveries as sent when they were not, with the public correction as evidence.
 
-- Live manifest: https://clickcoded.com/ai-visibility-check-free/checkable.json
+- Live manifest: https://clickcoded.com/checkable.json
   (`receipts.json` alias served forever at the same origin)
 - The spec + its own published attack surface (including a hole named by the first professional
   evaluator to respond): https://checkable.clickcoded.com/
