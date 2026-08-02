@@ -27,7 +27,8 @@ a{color:var(--mint)}
 .wrap ul{margin:10px 0 0 20px}
 .wrap li{margin-bottom:6px}
 label{display:block;font-family:var(--mono);font-size:.75rem;letter-spacing:.04em;text-transform:uppercase;color:var(--dim);margin:16px 0 4px}
-input[type=url]{width:100%;background:rgba(4,38,44,.5);border:1px solid var(--border);border-radius:6px;color:var(--ink);padding:9px 10px;font-family:var(--sans,Inter,sans-serif);font-size:.92rem;box-sizing:border-box}
+input[type=url],input[type=email]{width:100%;background:rgba(4,38,44,.5);border:1px solid var(--border);border-radius:6px;color:var(--ink);padding:9px 10px;font-family:var(--sans,Inter,sans-serif);font-size:.92rem;box-sizing:border-box}
+#lead-form input[type=email]{flex:1 1 220px;width:auto}
 .btn{font-family:var(--mono);font-size:.8rem;border:1px solid var(--border);background:transparent;color:var(--ink);border-radius:6px;padding:9px 16px;cursor:pointer}
 .btn:hover{border-color:var(--mint);color:var(--mint)}
 .btn.primary{background:var(--mint);color:#04251f;border-color:var(--mint);font-weight:650}
@@ -88,11 +89,14 @@ input[type=url]{width:100%;background:rgba(4,38,44,.5);border:1px solid var(--bo
 </header>
 <div class="wrap">
 <p class="mark">CLICK CODED · THE FREE CLAIMS CHECK · CHECKABILITY, NOT TRUTH</p>
-<h1>The free claims check</h1>
-<p class="sub">Paste a URL. We read the page the way a crawler reads it, find every claim-shaped
-statement on it (a number, a percent, a "trusted by," a superlative, a result), quote each one back
-to you, and check whether it sits next to a link to evidence. Free, ungated, no signup, forever.
-This is an automated, shallow first pass, not the audit's judgment work. The
+<h1>Could a stranger check your claims?</h1>
+<p class="sub"><strong>Don't trust AI. Check it.</strong> That principle is the whole reason this
+tool exists, and it cuts at us the same as anyone. So this is the one question it answers about
+your site: <strong>could a stranger check your claims?</strong> Not whether they are true. Whether
+anybody could tell. Paste a URL and every claim-shaped statement on that page comes back quoted
+verbatim, each one marked with whether it sits next to evidence a reader can actually follow.
+Free, ungated, no signup, forever.</p>
+<p class="sub">This is an automated, shallow first pass, not the audit's judgment work. The
 <a href="/audit/">Checkable Audit</a> does that part by hand.</p>
 
 <div class="rule"><strong>What this checks, precisely:</strong> whether a claim CAN be checked, not
@@ -116,12 +120,22 @@ measures exactly that gap.</p>
 
 <div id="output"></div>
 
+<div id="lead-capture" class="cta hidden">
+<p><strong>Want this result emailed to you?</strong> Drop your address. No spam, unsubscribe any
+time. Your result above is already complete and stays that way whether or not you do this.</p>
+<form id="lead-form" class="actions">
+  <input type="email" id="lead-email" placeholder="you@yourcompany.com" required>
+  <button class="btn primary" id="lead-btn" type="submit">Email it to me</button>
+</form>
+<p class="small" id="lead-note"></p>
+</div>
+
 <h2>The rubric, published in full</h2>
 <p class="small">Every point is computed from mechanical presence facts, not opinion. This is the
 whole rubric, always, whether or not a run flatters the site.</p>
 <div class="rulegrid" id="static-rubric"></div>
 
-<h2>Three honest ways to go further</h2>
+<h2>Three ways to go further</h2>
 <div class="cta">
 <p><strong>Claims missing evidence?</strong> The <a href="/audit/">Checkable Audit</a> does the
 slow, uncomfortable part by hand: finding every claim, chasing down real evidence, and publishing
@@ -137,13 +151,21 @@ AI visibility check</a>.</p>
 <p class="small">Fetch conduct: we fetch the page you give us, its evidence links, and its manifest
 paths, and nothing else. No crawling beyond what you submit. We keep aggregate counts (how many
 runs, how many found a manifest) and never store the URL you scanned. Run by Click Coded, an
-AI-operated studio, disclosed on every page.</p>
+AI-operated studio, disclosed on every page. The claims on this page are in
+<a href="https://clickcoded.com/ai-visibility-check-free/checkable.json">our own manifest</a>,
+where you can check them the same way this tool would.</p>
 </div>
 
 <script>
 (function(){
 const $=id=>document.getElementById(id);
 const API='https://checker.clickcoded.com/api/claims-check';
+const LEAD_API='https://checker.clickcoded.com/api/lead';
+
+// Capture is post-value by design (brief 4): the full result renders first and never depends on
+// this. OPS NOTE: the first real contact through this rail satisfies half of NURTURE's re-arm
+// trigger (endpoint live + >=1 real contact). Flag it to Brandon; never auto-arm.
+let lastTarget = null, lastScore = null;
 
 function escHtml(s){
   return String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -174,12 +196,12 @@ renderStaticRubric();
 // verbatim from that page at that time; re-run the live button any time to see today's version.
 const DEMO_RESULT = {
   target: 'https://checkable.clickcoded.com/audit/',
-  fetchedAt: '2026-08-02T05:14:26.742Z',
+  fetchedAt: '2026-08-02T05:34:42.510Z',
   page: {ok:true, status:200},
   claims: [
     {quote:'The first three buyers get the $99 price, and in exchange:', section:'The founding three', kinds:['money'], evidence:'none'},
     {quote:'$99 for the first three businesses, then $149.', section:'Become checkable', kinds:['money'], evidence:'none'},
-    {quote:'Our own manifest is checkable.json , our revenue is published in it, and it currently reads $0.00.', section:'Become checkable', kinds:['money'], evidence:'external', evidenceUrl:'https://clickcoded.com/ai-visibility-check-free/checkable.json', evidenceStatus:'ok'},
+    {quote:'Our own manifest is checkable.json, our revenue is published in it, and it currently reads $0.00.', section:'Become checkable', kinds:['money'], evidence:'external', evidenceUrl:'https://clickcoded.com/ai-visibility-check-free/checkable.json', evidenceStatus:'ok'},
   ],
   counts: {blocksScanned:33, sentencesScanned:102, claimShaped:3, reported:3, withEvidence:1, evidenceExternal:1, evidenceFetched:1, evidenceOk:1, evidenceBroken:0},
   truncated: false,
@@ -266,11 +288,48 @@ function renderResult(data, opts){
     '<h3>Manifest</h3>'+
     renderManifestLine(data.manifest)+
     '<div class="warnbox"><strong>What this does not tell you:</strong> whether any of these claims are true. It tells you whether a stranger could check them: whether evidence exists, whether it loads, and whether it sits inside a published manifest anyone can validate. That is a different question, on purpose.</div>'+
+    '<p class="small">What you just read is an automated, shallow first pass, not the audit\'s judgment work. It matched patterns. It did not read your page the way a skeptical customer will, and it cannot tell you which of these claims actually matter to your business.</p>'+
     '<div class="cta"><p><strong>Claims missing evidence?</strong> The <a href="/audit/">Checkable Audit</a> does the slow, uncomfortable part by hand. $99 for the first three businesses, then $149.</p>'+
     '<p style="margin-top:10px">Prefer to do it yourself? The <a href="/generator/">free generator</a> and <a href="/">the spec</a> are right there. Curious if AI can even find the page? That\'s a different question. Run the <a href="https://clickcoded.com/ai-visibility-check-free/#urlForm">free AI visibility check</a>.</p></div>';
 
+  lastTarget = data.target;
+  lastScore = data.score ? data.score.earned : null;
+  if(!opts.demo) revealLeadCapture();
+
   out.scrollIntoView({behavior:'smooth', block:'start'});
 }
+
+// Demo runs never reveal the capture form: there is nothing of the visitor's to email them, and
+// asking for an address against someone else's sample result would be the exact lead-magnet
+// behaviour this tool is built to not be.
+function revealLeadCapture(){
+  $('lead-capture').classList.remove('hidden');
+  $('lead-note').textContent = '';
+  $('lead-btn').disabled = false;
+  $('lead-btn').textContent = 'Email it to me';
+}
+
+$('lead-form').addEventListener('submit', async function(ev){
+  ev.preventDefault();
+  const email = $('lead-email').value.trim();
+  if(!email) return;
+  $('lead-btn').disabled = true;
+  $('lead-btn').textContent = 'Sending...';
+  try {
+    const r = await fetch(LEAD_API, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({email, url:lastTarget, score:lastScore})
+    });
+    if(!r.ok) throw new Error('lead endpoint returned ' + r.status);
+    $('lead-note').textContent = "Sent. We'll follow up at that address.";
+    $('lead-btn').textContent = 'Sent';
+  } catch(err){
+    $('lead-note').textContent = "Couldn't reach the capture service. Your result above is unaffected.";
+    $('lead-btn').disabled = false;
+    $('lead-btn').textContent = 'Email it to me';
+  }
+});
 
 const CHECKING_MESSAGES = ['Fetching the page…', 'Scanning for claim-shaped statements…', 'Checking evidence links…', 'Probing for a manifest…'];
 
