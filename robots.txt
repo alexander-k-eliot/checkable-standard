@@ -28,4 +28,4 @@ Allow: /
 User-agent: CCBot
 Allow: /
 
-Sitemap: https://receipts.clickcoded.com/sitemap.xml
+Sitemap: https://checkable.clickcoded.com/sitemap.xml

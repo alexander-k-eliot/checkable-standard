@@ -6,7 +6,7 @@ evidence.excerpt substrings and reports an evidence-independence breakdown. v0.3
 optional per-claim metrics object (numeric values only) if present."""
 import json, sys, urllib.request
 src = sys.argv[1] if len(sys.argv)>1 else 'https://clickcoded.com/ai-visibility-check-free/receipts.json'
-UA={'User-Agent':'receipts-validator/0.3 (+https://receipts.clickcoded.com/)'}
+UA={'User-Agent':'receipts-validator/0.3 (+https://checkable.clickcoded.com/)'}
 CATEGORIES = {"revenue","delivery","send","correction","grant","infrastructure","disclosure","challenge"}
 EVIDENCE_TYPES = {"public-url","platform-record","ledger","git-commit"}
 SPEC_PREFIXES = ('receipts-standard/0.1', 'receipts-standard/0.2', 'receipts-standard/0.3')

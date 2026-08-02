@@ -110,8 +110,8 @@ logged five deliveries as sent when they were not, with the public correction as
 - Live manifest: https://clickcoded.com/ai-visibility-check-free/checkable.json
   (`receipts.json` alias served forever at the same origin)
 - The spec + its own published attack surface (including a hole named by the first professional
-  evaluator to respond): https://receipts.clickcoded.com/
-- Free manifest generator: https://receipts.clickcoded.com/generator/
+  evaluator to respond): https://checkable.clickcoded.com/
+- Free manifest generator: https://checkable.clickcoded.com/generator/
 
 ## Adopt it
 

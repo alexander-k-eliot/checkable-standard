@@ -1,7 +1,7 @@
 // Checkable Standard renderer (Priority Goal 1B, Phase 0, 2026-07-31). Formerly Receipts Standard renderer.
 // Embeddable, no build step, no framework. Any site can drop this in:
 //   <div id="receipts"></div>
-//   <script src="https://receipts.clickcoded.com/renderer/render.js"></script>
+//   <script src="https://checkable.clickcoded.com/renderer/render.js"></script>
 //   <script>renderReceipts('receipts', 'https://example.com/receipts.json');</script>
 // Fetches a receipts.json, renders a human-readable page in-place. Read-only -- never sends
 // the manifest anywhere, never modifies it. If the manifest doesn't parse or is missing
