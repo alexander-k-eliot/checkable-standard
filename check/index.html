@@ -192,31 +192,34 @@ function renderStaticRubric(){
 }
 renderStaticRubric();
 
-// DO NOT hand-edit any field below, including evidenceUrl. These are not links we authored, they
-// are what the engine extracted from the audit page during the dated run named here. The
-// evidenceUrl still reads .../ai-visibility-check-free/checkable.json because that is what the
-// audit page linked at capture time; clickcoded.com/checkable.json is now the canonical URL and
-// the old path 301s to it. When the audit page's own link is updated, RE-RUN the capture. Editing
-// scan output to match a later state would be fabricating a result, which is the exact failure
-// this tool exists to surface.
+// DO NOT hand-edit any field below. These are not links or numbers we authored, they are what
+// the engine extracted from the audit page during the dated run named here. When the audit page
+// or the live infrastructure it depends on changes, RE-RUN the capture (see receipts-standard's
+// scratchpad harness note in ops/session-log.md for the local-run method). Editing scan output to
+// match a later state would be fabricating a result, which is the exact failure this tool exists
+// to surface.
 // A real, dated capture -- not a fabricated example. Run locally against the live engine
-// (src/claims.ts) targeting checkable.clickcoded.com/audit/ on 2026-08-02. Every quote below is
-// verbatim from that page at that time; re-run the live button any time to see today's version.
+// (src/claims.ts) targeting checkable.clickcoded.com/audit/ on 2026-08-02, re-run same day after
+// the hub-origin manifest cache lag (session-log 2026-08-02, "GitHub Pages edge-cache lag") cleared
+// and the audit page's manifest link was repointed at the canonical clickcoded.com/checkable.json
+// (commit c294104) -- both changes are why this capture's score differs from the wedge build's
+// original one. Every quote below is verbatim from that page at that time; re-run the live button
+// any time to see today's version.
 const DEMO_RESULT = {
   target: 'https://checkable.clickcoded.com/audit/',
-  fetchedAt: '2026-08-02T05:34:42.510Z',
+  fetchedAt: '2026-08-02T06:03:07.359Z',
   page: {ok:true, status:200},
   claims: [
     {quote:'The first three buyers get the $99 price, and in exchange:', section:'The founding three', kinds:['money'], evidence:'none'},
     {quote:'$99 for the first three businesses, then $149.', section:'Become checkable', kinds:['money'], evidence:'none'},
-    {quote:'Our own manifest is checkable.json, our revenue is published in it, and it currently reads $0.00.', section:'Become checkable', kinds:['money'], evidence:'external', evidenceUrl:'https://clickcoded.com/ai-visibility-check-free/checkable.json', evidenceStatus:'ok'},
+    {quote:'Our own manifest is checkable.json, our revenue is published in it, and it currently reads $0.00.', section:'Become checkable', kinds:['money'], evidence:'external', evidenceUrl:'https://clickcoded.com/checkable.json', evidenceStatus:'ok'},
   ],
   counts: {blocksScanned:33, sentencesScanned:102, claimShaped:3, reported:3, withEvidence:1, evidenceExternal:1, evidenceFetched:1, evidenceOk:1, evidenceBroken:0},
   truncated: false,
-  manifest: {present:false},
-  score: {earned:4, outOf:10, rubric:[
-    {id:'manifest-present', label:'A claims manifest (checkable.json or receipts.json) is published', points:3, earned:0},
-    {id:'manifest-shape', label:'The manifest has the required fields and spec marker (shape check, not the full validator)', points:1, earned:0},
+  manifest: {present:true, shapeConforming:true, claimCount:32, url:'https://checkable.clickcoded.com/checkable.json'},
+  score: {earned:8, outOf:10, rubric:[
+    {id:'manifest-present', label:'A claims manifest (checkable.json or receipts.json) is published', points:3, earned:3},
+    {id:'manifest-shape', label:'The manifest has the required fields and spec marker (shape check, not the full validator)', points:1, earned:1},
     {id:'any-evidence', label:'At least one detected claim sits in a content block that links to something', points:1, earned:1},
     {id:'half-evidence', label:'At least half of detected claims sit in blocks that link to something', points:2, earned:0},
     {id:'links-resolve', label:'Every evidence link we fetched actually loaded', points:2, earned:2},
