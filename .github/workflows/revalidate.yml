@@ -1,0 +1,69 @@
+# Daily revalidation for Checkable Open and the registry.
+#
+# Three passes: one full pass over every monitored manifest, then two
+# confirmation passes that re-fetch only subjects whose morning fetch failed.
+# A failure is never public until all three fetches, spread over six hours,
+# have failed (standing.py is the policy; this file is just its scheduler).
+#
+# The full pass also updates adopters.json standing fields and commits the
+# diff, so the published registry file always mirrors the state machine.
+#
+# Secrets required (set once, see the worker RUNBOOK):
+#   RUNNER_TOKEN  bearer token matching the worker's RUNNER_TOKEN secret
+
+name: revalidate
+on:
+  schedule:
+    - cron: "0 13 * * *"   # full pass, 13:00 UTC
+    - cron: "0 16 * * *"   # confirmation pass 1
+    - cron: "0 19 * * *"   # confirmation pass 2 (6h after the first fetch)
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "full or confirm-only"
+        required: false
+        default: "full"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: revalidate
+  cancel-in-progress: false
+
+jobs:
+  revalidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Decide pass type
+        id: mode
+        run: |
+          MODE="full"
+          if [ "${{ github.event_name }}" = "schedule" ] && [ "${{ github.event.schedule }}" != "0 13 * * *" ]; then
+            MODE="confirm-only"
+          fi
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.mode }}" = "confirm-only" ]; then
+            MODE="confirm-only"
+          fi
+          echo "mode=$MODE" >> "$GITHUB_OUTPUT"
+      - name: Run revalidation
+        env:
+          RUNNER_TOKEN: ${{ secrets.RUNNER_TOKEN }}
+        run: |
+          if [ "${{ steps.mode.outputs.mode }}" = "confirm-only" ]; then
+            python3 run_revalidation.py --confirm-only
+          else
+            python3 run_revalidation.py
+          fi
+      - name: Commit registry standing changes
+        if: steps.mode.outputs.mode == 'full'
+        run: |
+          if ! git diff --quiet adopters.json; then
+            git config user.name "checkable-open-runner"
+            git config user.email "run@clickcoded.com"
+            git add adopters.json
+            git commit -m "Registry standing update from today's revalidation run"
+            git push
+          fi

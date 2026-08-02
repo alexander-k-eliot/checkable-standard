@@ -284,14 +284,24 @@ def badge(state, date, template=False):
     # mullion between glass and plaque
     o.append(f'<path d="M131.5 12 V50" stroke="{LINE_SFT}" stroke-width="1"/>')
 
-    # the plaque: who says so, and the dated fact
-    o.append(chevron(143, 11.4, 14, MINT, weight=6.6))
-    o.append(f'<text x="162" y="21.5" font-family="{MONO}" font-size="8.6" letter-spacing=".07em" '
+    # the plaque: who says so, and the dated fact.
+    # Same two-column rule as hero() — see the long note there. The wordmark used to
+    # sit at 162 while the label and date sat at 155, three left edges in a block of
+    # three lines. 155 is the one that survives: "NOT VALIDATED SINCE" runs 96 units
+    # at this size, so aligning on 162 would leave under 2 units of panel edge in the
+    # failing state. The marks move left to open a gap the wordmark no longer fills.
+    TEXT_X, MARK_X = 155.0, 140.3
+    CHEV_SIZE, CHEV_W, PILOT_R = 14, 6.6, 3.1
+    chev_x = MARK_X - (12 - CHEV_W / 2) * (CHEV_SIZE / 64.0)
+    pilot_cx = MARK_X + PILOT_R
+
+    o.append(chevron(chev_x, 11.4, CHEV_SIZE, MINT, weight=CHEV_W))
+    o.append(f'<text x="{TEXT_X:g}" y="21.5" font-family="{MONO}" font-size="8.6" letter-spacing=".07em" '
              f'fill="{INK}" font-weight="600">CHECKABLE OPEN</text>')
-    o.append(pilot(s["pilot"], 147, 31, 3.1, s["pilot_colour"], glow=lit))
-    o.append(f'<text x="155" y="33.7" font-family="{MONO}" font-size="7.4" letter-spacing=".085em" '
+    o.append(pilot(s["pilot"], pilot_cx, 31, PILOT_R, s["pilot_colour"], glow=lit))
+    o.append(f'<text x="{TEXT_X:g}" y="33.7" font-family="{MONO}" font-size="7.4" letter-spacing=".085em" '
              f'fill="{s["label_colour"]}" font-weight="600">{s["label"]}</text>')
-    o.append(f'<text x="155" y="46.8" font-family="{MONO}" font-size="10.2" letter-spacing=".02em" '
+    o.append(f'<text x="{TEXT_X:g}" y="46.8" font-family="{MONO}" font-size="10.2" letter-spacing=".02em" '
              f'fill="{s["date_colour"]}">{date_txt}</text>')
     o.append('</svg>')
     return "".join(o)
@@ -341,14 +351,41 @@ def hero(state, date):
     o.append('<path d="M22 128 L134 26 L190 26 L22 154 Z" fill="#eef6f4" opacity=".03"/>')
     o.append('</g></g>')
 
+    # The plaque is a two-column lockup, and both columns are computed, not eyeballed
+    # (Brandon, 2026-08-02: the three text lines must left-align perfectly). Before
+    # this, the wordmark sat at 406.7 while the label and date sat at 388.7, so the
+    # block had three different left edges and read as drift rather than structure.
+    #
+    #   TEXT_X  every line of type starts here. All three. No exceptions.
+    #   MARK_X  the visible left edge of the leading marks (chevron, pilot lamp),
+    #           which hang in the gutter to the left of the type.
+    #
+    # The marks have different widths, so their right-hand gaps differ. That is
+    # correct: what the eye reads in a lockup is the two vertical edges, not the
+    # gaps. Both marks are placed from their own true geometry so the alignment
+    # survives any future change to the glyphs.
+    # TEXT_X is the LEFT of the old three, not the right, and that is load-bearing.
+    # The longest string any state prints is "NOT VALIDATED SINCE" at 189.3 units
+    # wide. Aligning the block on the old wordmark position (406.7) put that label
+    # 4 units from the panel edge in the failing state. At 388.7 it clears by 22,
+    # which is also the glass pane's left inset, so the plaque breathes the same on
+    # both sides. Check this if the labels are ever reworded: a longer string moves
+    # this number, and the dark states are where it bites.
+    TEXT_X, MARK_X = 388.7, 361.0
+    CHEV_SIZE, PILOT_R = 24, 7
+    # chevron: the 64-unit artwork's visible left edge sits at 9.5 (path x=12 minus
+    # half the 5-unit stroke), so the translate origin is offset back by that much.
+    chev_x = MARK_X - 9.5 * (CHEV_SIZE / 64.0)
+    pilot_cx = MARK_X + PILOT_R
+
     o.append(f'<path d="M347 40 V140" stroke="{LINE_SFT}" stroke-width="1"/>')
-    o.append(chevron(372.7, 41, 24, MINT))
-    o.append(f'<text x="406.7" y="59" font-family="{MONO}" font-size="16.5" letter-spacing=".07em" '
+    o.append(chevron(chev_x, 41, CHEV_SIZE, MINT))
+    o.append(f'<text x="{TEXT_X:g}" y="59" font-family="{MONO}" font-size="16.5" letter-spacing=".07em" '
              f'fill="{INK}" font-weight="600">CHECKABLE OPEN</text>')
-    o.append(pilot(s["pilot"], 373.7, 89.3, 7, s["pilot_colour"], glow=lit))
-    o.append(f'<text x="388.7" y="94.5" font-family="{MONO}" font-size="14.5" letter-spacing=".085em" '
+    o.append(pilot(s["pilot"], pilot_cx, 89.3, PILOT_R, s["pilot_colour"], glow=lit))
+    o.append(f'<text x="{TEXT_X:g}" y="94.5" font-family="{MONO}" font-size="14.5" letter-spacing=".085em" '
              f'fill="{s["label_colour"]}" font-weight="600">{s["label"]}</text>')
-    o.append(f'<text x="388.7" y="132.5" font-family="{MONO}" font-size="27" letter-spacing=".01em" '
+    o.append(f'<text x="{TEXT_X:g}" y="132.5" font-family="{MONO}" font-size="27" letter-spacing=".01em" '
              f'fill="{s["date_colour"]}">{date}</text>')
     o.append('</svg>')
     return "".join(o)
