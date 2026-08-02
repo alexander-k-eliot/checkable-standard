@@ -118,16 +118,18 @@ def parse_conforming_stats(stdout):
 
 def build_targets(worker_targets):
     """Merge worker subjects (subscribers + self) with adopters.json entries.
-    Subscriber entries win on manifest_url collisions so alerts stay attached."""
+    Keyed by SLUG, not manifest_url: an http/https or www variant of the same
+    host must collapse to one subject, or two targets would race on one slug's
+    state. Subscriber entries win the collision so alerts stay attached."""
     targets = {}
     adopters = json.loads(ADOPTERS.read_text()).get("adopters", [])
     for entry in adopters:
         slug = slug_for(entry["manifest_url"])
-        targets[entry["manifest_url"]] = {
+        targets[slug] = {
             "slug": slug, "manifest_url": entry["manifest_url"],
             "display_name": entry.get("name", slug), "kind": "adopter"}
     for t in worker_targets:
-        targets[t["manifest_url"]] = t
+        targets[t["slug"]] = t
     return list(targets.values())
 
 
@@ -217,9 +219,12 @@ def main():
     resp = http_json(f"{WORKER_BASE}/open/api/runs", payload, RUNNER_TOKEN)
     print(f"posted: {json.dumps(resp)}")
 
-    if not args.confirm_only or events:
-        if update_adopters_file(states, fetched_at[:10]):
-            print("adopters.json updated from computed standing")
+    # Always mirror computed standing into adopters.json, every mode. A
+    # confirm-only pass can flip a state (a confirmed failure, a blip recovery),
+    # and the registry file lagging the worker by a day on exactly those runs
+    # was the audit finding that removed the mode condition here.
+    if update_adopters_file(states, fetched_at[:10]):
+        print("adopters.json updated from computed standing")
     return 0
 
 

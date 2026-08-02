@@ -534,6 +534,11 @@ def main():
             (f"open-{st}.svg", badge(st, d)),
             (f"open-{st}.template.svg", badge(st, d, template=True)),
             (f"hero-{st}.svg", hero(st, d)),
+            # Worker-ready hero, added 2026-08-02 launch audit: the offer page
+            # hero is served live from /open/clickcoded.com/hero.svg rather than
+            # as a baked-date file, because a monitoring product whose own hero
+            # shows a stale "validated" date is the exact failure it warns about.
+            (f"hero-{st}.template.svg", hero(st, "{{DATE}}")),
         ):
             p = os.path.join(OUT, name)
             with open(p, "w") as f:

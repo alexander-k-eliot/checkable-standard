@@ -57,13 +57,17 @@ jobs:
           else
             python3 run_revalidation.py
           fi
+      # Any pass may change standing (a confirmation pass is exactly where a
+      # failure becomes public), so the commit runs in every mode, gated only
+      # on the file actually differing. The rebase absorbs a human commit that
+      # landed between checkout and push instead of failing the run.
       - name: Commit registry standing changes
-        if: steps.mode.outputs.mode == 'full'
         run: |
           if ! git diff --quiet adopters.json; then
             git config user.name "checkable-open-runner"
             git config user.email "run@clickcoded.com"
             git add adopters.json
             git commit -m "Registry standing update from today's revalidation run"
+            git pull --rebase origin main
             git push
           fi
